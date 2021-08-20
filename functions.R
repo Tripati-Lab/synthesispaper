@@ -23,6 +23,7 @@ fitsingleDataset<-function(data, replicates=2, generations=1000){
                              cbind(model='Bayesian mixed',e$BLMM_Measured_errors), make.row.names = F
   )
   attr(SumTable, "DICs") <- attr(e,"DICs")
+  attr(SumTable, "R2s") <- attr(e,"R2s")
   return(SumTable)
 }
 fitsinglePartitioned <- function(calData, targetColumns, replicates=2 , generations=1000, maxtry=10){
@@ -50,24 +51,57 @@ fitsinglePartitioned <- function(calData, targetColumns, replicates=2 , generati
           return(resDS)
         }, error=function(e){})
       }
-    } )
+    })
+    
     names(subSampled)<-unique(calDataSelected$Material)
     
     fullDS<-rbind(cbind(.id='Full',dt) ,
                   rbindlist(subSampled, idcol = T)
     )
     
+    R2s<-lapply(subSampled, function(x) attr(x, 'R2s'))
+    R2s<-list(attr(dt, "R2s"),R2s)
+    
+    
     attr(fullDS, 'key')<-key
+    attr(fullDS, 'R2s')<-R2s
     return(fullDS)
   })
   
+  #Keys
   keys<-lapply(sumPart, function(x) attr(x, 'key'))
   names(keys)<- targetColumns
   keys<-rbindlist(keys, idcol = T)
+  keys<-keys[!duplicated(keys[,1:3]),]
+
+  #R2s
+  R2s<-lapply(sumPart, function(x) attr(x, 'R2s'))
+  names(R2s)<-targetColumns
+  R2SG<-sapply(1:length(targetColumns), function(y){
+  R2s<-lapply(R2s[[y]][-1], function(x) rbindlist(x, idcol = T))
+  })
+  R2full<-lapply(1:length(targetColumns), function(y){
+    R2s[[y]][[1]]
+  })
+  names(R2SG)<-targetColumns
+  names(R2full)<-targetColumns
   
+  R2SG<-rbindlist(R2SG, idcol = T)
+  colnames(R2SG)[1]<-"targetMaterialColumn"
+  R2full<- rbindlist(R2full, idcol = T)
+  R2full$targetMaterialColumn <- R2full$.id
+  R2s<-rbind(R2full,R2SG)
+  R2s<-R2s[,c(7,1:6)]
+  
+  #DICs
+  
+  
+  
+  #Parameters
   names(sumPart)<- targetColumns
   sumPart<-rbindlist(sumPart,  idcol = T)
   colnames(sumPart)[1]<-'targetMaterialColumn'
+  
   return(list(sumPart=sumPart,keys=keys))
 }
 
