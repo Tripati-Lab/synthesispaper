@@ -130,10 +130,10 @@ fitsinglePartitioned <- function(calData, targetColumns, replicates=2 , generati
   condensed<-list(ParameterSummary=sumPart, R2s=R2s,DICs=DICs, keys=keys)
   
   if(export == T){
-    lapply(seq_along(condensed), function(x) write.csv(condensed[[x]], paste0(prefix,'_',names(condensed)[x], '.csv')) ) 
-  }
-  
+  invisible(lapply(seq_along(condensed), function(x) write.csv(condensed[[x]], paste0(prefix,'_',names(condensed)[x], '.csv')) ) )
+  }else{
   return(condensed)
+  }
 }
 
 
