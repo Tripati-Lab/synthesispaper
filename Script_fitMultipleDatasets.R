@@ -28,7 +28,22 @@ testResults <- fitsinglePartitioned(
 )
 
 #Real analyses
-synData <-
+synData <-as.data.frame(
   read_sheet(
     "https://docs.google.com/spreadsheets/d/1PZ_o0lA-bpOGG9e76o4bGQWjvMnqgH56aWXmdxVkr-k/edit?usp=sharing"
-  )
+  ))
+
+targetColumns <- colnames(synData)[c(11:19)]
+
+SynthesisResults <- fitsinglePartitioned(
+  calData = synData,
+  targetColumns = targetColumns,
+  replicates = 2,
+  generations = 1000,
+  maxtry = 10,
+  export = T,
+  prefix = paste0("Synthesis_", Sys.Date())
+)
+
+
+
