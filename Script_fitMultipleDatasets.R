@@ -5,7 +5,6 @@ library(pbmcapply)
 library(IsoplotR)
 library(R2jags)
 library(data.table)
-
 source("functions.R")
 
 #Using some testing data
@@ -13,5 +12,11 @@ calData<-read.csv("https://raw.githubusercontent.com/Tripati-Lab/BayClump/main/B
 calData$Material2<-calData$Material
 calData$Material<-NULL
 targetColumns<-c("Material2", "Mineralogy")
-testResults<-fitsinglePartitioned(calData, targetColumns, replicates=2 , generations=1000, maxtry=10)
+testResults<-fitsinglePartitioned(calData=calData, 
+                                  targetColumns=targetColumns, 
+                                  replicates=2, 
+                                  generations=1000, 
+                                  maxtry=10, 
+                                  export=T, 
+                                  prefix=Sys.Date())
 

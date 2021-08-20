@@ -26,7 +26,7 @@ fitsingleDataset<-function(data, replicates=2, generations=1000){
   attr(SumTable, "R2s") <- attr(e,"R2s")
   return(SumTable)
 }
-fitsinglePartitioned <- function(calData, targetColumns, replicates=2 , generations=1000, maxtry=10){
+fitsinglePartitioned <- function(calData, targetColumns, replicates=2 , generations=1000, maxtry=10, export=T, prefix='results'){
   sumPart<-lapply(targetColumns, function(x){
     calDataSelected<-calData
     calDataSelected$Material <- calData[,x]
@@ -62,9 +62,13 @@ fitsinglePartitioned <- function(calData, targetColumns, replicates=2 , generati
     R2s<-lapply(subSampled, function(x) attr(x, 'R2s'))
     R2s<-list(attr(dt, "R2s"),R2s)
     
+    DICs<-lapply(subSampled, function(x) attr(x, 'DICs'))
+    DICs<-list(attr(dt, "DICs"),DICs)
     
     attr(fullDS, 'key')<-key
     attr(fullDS, 'R2s')<-R2s
+    attr(fullDS, 'DICs')<-DICs
+    
     return(fullDS)
   })
   
@@ -73,7 +77,8 @@ fitsinglePartitioned <- function(calData, targetColumns, replicates=2 , generati
   names(keys)<- targetColumns
   keys<-rbindlist(keys, idcol = T)
   keys<-keys[!duplicated(keys[,1:3]),]
-
+  colnames(keys)[1]<-"targetMaterialColumn"
+  
   #R2s
   R2s<-lapply(sumPart, function(x) attr(x, 'R2s'))
   names(R2s)<-targetColumns
@@ -92,17 +97,43 @@ fitsinglePartitioned <- function(calData, targetColumns, replicates=2 , generati
   R2full$targetMaterialColumn <- R2full$.id
   R2s<-rbind(R2full,R2SG)
   R2s<-R2s[,c(7,1:6)]
+  colnames(R2s)[c(2,3,4)]<-c("dataset", "R2 type", "model")
   
+
   #DICs
+  DICs<-lapply(sumPart, function(x) attr(x, 'DICs'))
+  names(DICs)<-targetColumns
+  DICsG<-sapply(1:length(targetColumns), function(y){
+    DICs<-lapply(DICs[[y]][-1], function(x) rbindlist(x, idcol = T))
+  })
+  DICsfull<-lapply(1:length(targetColumns), function(y){
+    DICs[[y]][[1]]
+  })
+  names(DICsG)<-targetColumns
+  names(DICsfull)<-targetColumns
   
+  DICsG<-rbindlist(DICsG, idcol = T)
+  colnames(DICsG)[1]<-"targetMaterialColumn"
+  DICsfull<- rbindlist(DICsfull, idcol = T)
+  DICsfull$targetMaterialColumn <- DICsfull$.id
+  DICs<-rbind(DICsfull,DICsG)
+  DICs<-DICs[,c(6,1,5,2:4)]
+  colnames(DICs)[c(2)]<-c("dataset")
   
   
   #Parameters
   names(sumPart)<- targetColumns
   sumPart<-rbindlist(sumPart,  idcol = T)
-  colnames(sumPart)[1]<-'targetMaterialColumn'
+  colnames(sumPart)[c(1,2,6)]<-c('targetMaterialColumn', 'dataset', 'BLMM_material')
+  sumPart<-sumPart[,c(1,2,6,3:5)]
   
-  return(list(sumPart=sumPart,keys=keys))
+  condensed<-list(ParameterSummary=sumPart, R2s=R2s,DICs=DICs, keys=keys)
+  
+  if(export == T){
+    lapply(seq_along(condensed), function(x) write.csv(condensed[[x]], paste0(prefix,'_',names(condensed)[x], '.csv')) ) 
+  }
+  
+  return(condensed)
 }
 
 
