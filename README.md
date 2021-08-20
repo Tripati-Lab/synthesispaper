@@ -1,7 +1,6 @@
-# Analyses for the synthesis paper
+# Synthesis paper
 
 Brief guide on the current and relevant files hosted in this repo
-
 
 ## Scripts
 - `plotDataGroups.R`: Generates raw plots by target columns.
