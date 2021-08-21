@@ -7,6 +7,22 @@ targetColumns <- colnames(synData)[c(11:20)]
 
 dir.create('RawPlots', recursive = T, showWarnings = F)
 
+p<-ggplot(synData, aes(
+  y = D47, x = Temperature)) +
+  geom_errorbar(aes(
+    ymin = D47 - D47error, ymax = D47 + D47error
+  )) +
+  geom_errorbarh(
+    aes(xmin = Temperature - TempError, xmax = Temperature + TempError)
+  ) +
+  geom_point(alpha = 0.5, size = 2) +
+  ggtitle("Full dataset") +
+  theme_bw()
+
+pdf("RawPlots/Full_dataset.pdf")
+print(p)
+dev.off()
+
 for (x in 1:length(targetColumns)) {
   pdf(paste0("RawPlots/", targetColumns[x], '.pdf'))
   group <- factor(unlist(synData[, targetColumns[x]]))
