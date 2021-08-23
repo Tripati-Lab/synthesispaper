@@ -1,4 +1,5 @@
 library(ggplot2)
+library(googlesheets4)
 synData <-
   read_sheet(
     "https://docs.google.com/spreadsheets/d/1PZ_o0lA-bpOGG9e76o4bGQWjvMnqgH56aWXmdxVkr-k/edit?usp=sharing"
@@ -59,3 +60,24 @@ for (x in 1:length(targetColumns)) {
   }
   dev.off()
 }
+
+synData2<-synData[!is.na(synData$Thiagarajan),]
+
+p<-ggplot(synData2, aes(
+  y = D47, x = Temperature, color=factor(Thiagarajan))) +
+  geom_errorbar(aes(
+    ymin = D47 - D47error, ymax = D47 + D47error
+  )) +
+  geom_errorbarh(
+    aes(xmin = Temperature - TempError, xmax = Temperature + TempError)
+  ) +
+  geom_point(alpha = 0.5, size = 2) +
+  ggtitle("Thiagarajan_2") +
+  theme_bw()
+
+pdf("RawPlots/Thiagarajan_only_dataset.pdf")
+print(p)
+dev.off()
+
+
+
