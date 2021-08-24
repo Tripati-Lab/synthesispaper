@@ -4,7 +4,7 @@ synData <-
   read_sheet(
     "https://docs.google.com/spreadsheets/d/1PZ_o0lA-bpOGG9e76o4bGQWjvMnqgH56aWXmdxVkr-k/edit?usp=sharing"
   )
-targetColumns <- colnames(synData)[c(11:20)]
+targetColumns <- colnames(synData)[c(2,11:20)]
 
 dir.create('RawPlots', recursive = T, showWarnings = F)
 
@@ -80,4 +80,22 @@ print(p)
 dev.off()
 
 
+synDataRob<-synData
+synDataRob$Rob<-ifelse(synDataRob$Code=='Ulrich', 'Ulrich', 'Other')
+
+p<-ggplot(synDataRob, aes(
+  y = D47, x = Temperature, color=factor(Rob))) +
+  geom_errorbar(aes(
+    ymin = D47 - D47error, ymax = D47 + D47error
+  )) +
+  geom_errorbarh(
+    aes(xmin = Temperature - TempError, xmax = Temperature + TempError)
+  ) +
+  geom_point(alpha = 0.5, size = 2) +
+  ggtitle("Rob_dataset") +
+  theme_bw()
+
+pdf("RawPlots/Rob_only_dataset.pdf")
+print(p)
+dev.off()
 
