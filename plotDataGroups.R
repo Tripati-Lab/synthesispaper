@@ -4,7 +4,7 @@ synData <-
   read_sheet(
     "https://docs.google.com/spreadsheets/d/1PZ_o0lA-bpOGG9e76o4bGQWjvMnqgH56aWXmdxVkr-k/edit?usp=sharing"
   )
-targetColumns <- colnames(synData)[c(2,11:20)]
+targetColumns <- colnames(synData)[c(2,11:19)]
 
 dir.create('RawPlots', recursive = T, showWarnings = F)
 
