@@ -5,7 +5,6 @@ library(pbmcapply)
 library(IsoplotR)
 library(R2jags)
 library(data.table)
-library(googlesheets4)
 source("functions.R")
 
 #Using sample data from the app
@@ -28,10 +27,14 @@ testResults <- fitsinglePartitioned(
 )
 
 #Real analyses
-synData <-as.data.frame(
-  read_sheet(
-    "https://docs.google.com/spreadsheets/d/1PZ_o0lA-bpOGG9e76o4bGQWjvMnqgH56aWXmdxVkr-k/edit?usp=sharing"
-  ))
+# Using the version on gdrive?
+# library(googlesheets4)
+# synData <-as.data.frame(
+#   read_sheet(
+#     "https://docs.google.com/spreadsheets/d/1PZ_o0lA-bpOGG9e76o4bGQWjvMnqgH56aWXmdxVkr-k/edit?usp=sharing"
+#   ))
+
+synData <- read.csv('RawData/Current List_Sep22_2021.csv')
 
 targetColumns <- colnames(synData)[c(11:19)]
 
