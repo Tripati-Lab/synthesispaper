@@ -36,6 +36,8 @@ testResults <- fitsinglePartitioned(
 
 #synData <- read.csv('RawData/Current List_Sep22_2021.csv')
 synData <- read.csv('RawData/Current List_Sep27_2021.csv')
+synData$TempError <- ifelse(synData$TempError ==0, 1E-5, synData$TempError)
+synData$D47error <- ifelse(synData$D47error ==0, 1E-5, synData$D47error)
 
 targetColumns <- colnames(synData)[c(11:19)]
 
