@@ -37,7 +37,8 @@ testResults <- fitsinglePartitioned(
 #synData <- read.csv('RawData/Current List_Sep22_2021.csv')
 synData <- read.csv('RawData/Current List_Sep27_2021.csv')
 
-targetColumns <- colnames(synData)[c(11:19)]
+#targetColumns <- colnames(synData)[c(11:19)]
+targetColumns <- colnames(synData)[c(13)]
 
 SynthesisResults <- fitsinglePartitioned(
   calData = synData,
@@ -46,8 +47,6 @@ SynthesisResults <- fitsinglePartitioned(
   generations = 10000,
   maxtry = 10,
   export = T,
-  prefix = paste0("Synthesis_", Sys.Date())
+  prefix = paste0("Synthesis_",colnames(synData)[c(13)],"_", Sys.Date())
 )
-
-
 
