@@ -23,7 +23,8 @@ source(
 
 fitsingleDataset <- function(data,
                              replicates = 2,
-                             generations = 1000) {
+                             generations = 1000,
+                             isMixed=T) {
   ##Models
   a <- simulateYork_measured(data = data, replicates = replicates)
   b <- simulateLM_measured(data = data, replicates = replicates)
@@ -34,7 +35,7 @@ fitsingleDataset <- function(data,
       data = data,
       replicates = replicates,
       generations = generations,
-      isMixed = T
+      isMixed = isMixed
     )
   
   SumTable <- rbind.data.frame(
@@ -52,9 +53,15 @@ fitsingleDataset <- function(data,
       e$BLM_Measured_no_errors,
       material = NA
     ),
-    cbind(model = 'Bayesian mixed', e$BLMM_Measured_errors),
     make.row.names = F
   )
+  
+  if( isMixed ) {
+    SumTable <- rbind(SumTable,
+  cbind(model = 'Bayesian mixed', e$BLMM_Measured_errors)
+    )
+  }
+  
   attr(SumTable, "DICs") <- attr(e, "DICs")
   attr(SumTable, "R2s") <- attr(e, "R2s")
   return(SumTable)
@@ -79,7 +86,7 @@ fitsinglePartitioned <-
                                                               2), ]
       #Full dataset
       dt <-
-        fitsingleDataset(calDataSelected,
+        fitsingleDataset(data = calDataSelected,
                          replicates = replicates,
                          generations = generations)
       #Partitioned by level
@@ -107,7 +114,8 @@ fitsinglePartitioned <-
                   fitsingleDataset(
                     calDataSelectedgroup,
                     replicates = replicates,
-                    generations = generations
+                    generations = generations,
+                    isMixed = F
                   )
                 )
               i = 1
@@ -163,7 +171,8 @@ fitsinglePartitioned <-
     colnames(R2SG)[1] <- "targetMaterialColumn"
     R2full <- rbindlist(R2full, idcol = T)
     R2full$targetMaterialColumn <- R2full$.id
-    R2s <- rbind(R2full, R2SG)
+
+    R2s <- rbindlist(list(R2full, R2SG), fill = T)
     R2s <- R2s[, c(7, 1:6)]
     colnames(R2s)[c(2, 3, 4)] <- c("dataset", "R2 type", "model")
     
