@@ -188,10 +188,11 @@ fitsinglePartitioned <-
     keys <- rbindlist(keys, idcol = T)
     samples <- as.data.frame(table(keys$original))
     colnames(samples)[1] <- 'original'
+    
     samples$original <- as.numeric(samples$original)
     keys<-as.data.frame(keys)
-    keys<- aggregate(numeric(nrow(keys)), keys[c(".id", "original")], length) 
-    colnames(keys)[c(1,3)] <- c("targetMaterialColumn",'N')
+    keys<- aggregate(numeric(nrow(keys)), keys[c(".id", "original","number")], length) 
+    colnames(keys) <- c( "targetMaterialColumn",'OriginalCode',"NumericCode",'N')
     
     #R2s
     R2s <- lapply(sumPart, function(x)
