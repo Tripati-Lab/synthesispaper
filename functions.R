@@ -193,6 +193,7 @@ fitsinglePartitioned <-
     keys<-as.data.frame(keys)
     keys<- aggregate(numeric(nrow(keys)), keys[c(".id", "original","number")], length) 
     colnames(keys) <- c( "targetMaterialColumn",'OriginalCode',"NumericCode",'N')
+    keys <- keys[order(keys$targetMaterialColumn),] 
     
     #R2s
     R2s <- lapply(sumPart, function(x)
