@@ -6,6 +6,7 @@ library(IsoplotR)
 library(R2jags)
 library(data.table)
 library(tictoc)
+library(rlist)
 source("functions.R")
 
 tic()

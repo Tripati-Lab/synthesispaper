@@ -144,7 +144,6 @@ fitsinglePartitioned <-
       
       ##Now combine convergence
       ###For part
-      library(rlist)
       Conv <- lapply(subSampled, function(x)
         attr(x, 'Conv') )
       names(Conv) <- names(subSampled)
@@ -240,14 +239,19 @@ fitsinglePartitioned <-
     DICs <- DICs[, c(6, 1, 5, 2:4)]
     colnames(DICs)[c(2)] <- c("dataset")
     
-    #Convergence
+    #Convergence (assuming one column at a time is processed)
     names(sumPart) <- targetColumns
     Conv <- lapply(sumPart, function(x)
       attr(x, 'Conv')  )
     
-    ##Need to flatten element 2 and combine everything in a single data.frame
+    comp<- list()
+    comp[[1]] <- cbind.data.frame(dataset='Full', Conv[[1]][[1]])
+    for( i in seq_along(Conv[[1]][[2]])){
+      comp[[i+1]] <- cbind.data.frame(dataset= names(Conv[[1]][[2]])[i] , Conv[[1]][[2]][[i]])
+    }
     
-    
+    Conv <- rbindlist(comp)
+
     
     #Parameters
     names(sumPart) <- targetColumns
@@ -261,7 +265,8 @@ fitsinglePartitioned <-
         ParameterSummary = sumPart,
         R2s = R2s,
         DICs = DICs,
-        keys = keys
+        keys = keys,
+        Conv = Conv
       )
     
     if (export == T) {
