@@ -1,7 +1,10 @@
 ##Functions are sourced from BayClump
 
+#source(
+#  "https://raw.githubusercontent.com/Tripati-Lab/BayClump/main/Functions/fitClumpedRegressions.R"
+#)
 source(
-  "https://raw.githubusercontent.com/Tripati-Lab/BayClump/main/Functions/fitClumpedRegressions.R"
+  "https://raw.githubusercontent.com/Tripati-Lab/BayClump/dev/Functions/fitClumpedRegressions.R"
 )
 source(
   "https://raw.githubusercontent.com/Tripati-Lab/BayClump/main/Functions/clumPipe.R"
@@ -10,7 +13,7 @@ source(
   "https://raw.githubusercontent.com/Tripati-Lab/BayClump/main/Functions/getR2Bayesian.R"
 )
 source(
-  "https://raw.githubusercontent.com/Tripati-Lab/BayClump/main/Functions/functionsSimulationsMixed.R"
+  "https://raw.githubusercontent.com/Tripati-Lab/BayClump/dev/Functions/functionsSimulationsMixed.R"
 )
 source(
   "https://raw.githubusercontent.com/Tripati-Lab/BayClump/main/Functions/functionsRegressionCI.R"
@@ -64,6 +67,7 @@ fitsingleDataset <- function(data,
   
   attr(SumTable, "DICs") <- attr(e, "DICs")
   attr(SumTable, "R2s") <- attr(e, "R2s")
+  attr(SumTable, "Conv") <- attr(e, "Conv")
   return(SumTable)
 }
 fitsinglePartitioned <-
@@ -138,20 +142,57 @@ fitsinglePartitioned <-
         attr(x, 'DICs'))
       DICs <- list(attr(dt, "DICs"), DICs)
       
+      ##Now combine convergence
+      ###For part
+      library(rlist)
+      Conv <- lapply(subSampled, function(x)
+        attr(x, 'Conv') )
+      names(Conv) <- names(subSampled)
+      Conv <- Filter(Negate(is.null), Conv)
+      
+    rawConv <- lapply(seq_along(Conv),  function(y){
+      x<-list.flatten(Conv[[y]])
+      test<-lapply(seq_along(x), function(z){
+        par<- as.data.frame(x[[z]])
+        cbind.data.frame(parameter=row.names(par),par)
+        })
+      names(test) <-names(x)
+      rbindlist(test, fill=T, idcol='Model', use.names=T)
+      
+    })
+    
+    names(rawConv) <- names(Conv)
+      
+    
+    ###For the full
+      
+    fl<-lapply(list.flatten(attr(dt, "Conv")), function(z){
+      par<- as.data.frame(z)
+      cbind.data.frame(parameter=row.names(par),par)
+    })
+    flC<-rbindlist(fl, fill=T, idcol='Model', use.names=T)
+    
+
       attr(fullDS, 'key') <- key
       attr(fullDS, 'R2s') <- R2s
       attr(fullDS, 'DICs') <- DICs
+      attr(fullDS, 'Conv') <- list(flC,rawConv)
       
       return(fullDS)
     })
+    
     
     #Keys
     keys <- lapply(sumPart, function(x)
       attr(x, 'key'))
     names(keys) <- targetColumns
     keys <- rbindlist(keys, idcol = T)
-    keys <- keys[!duplicated(keys[, 1:3]), ]
-    colnames(keys)[1] <- "targetMaterialColumn"
+    samples <- as.data.frame(table(keys$original))
+    colnames(samples)[1] <- 'original'
+    samples$original <- as.numeric(samples$original)
+    keys<-as.data.frame(keys)
+    keys<- aggregate(numeric(nrow(keys)), keys[c(".id", "original")], length) 
+    colnames(keys)[c(1,3)] <- c("targetMaterialColumn",'N')
     
     #R2s
     R2s <- lapply(sumPart, function(x)
@@ -199,7 +240,15 @@ fitsinglePartitioned <-
     DICs <- DICs[, c(6, 1, 5, 2:4)]
     colnames(DICs)[c(2)] <- c("dataset")
     
+    #Convergence
+    names(sumPart) <- targetColumns
+    Conv <- lapply(sumPart, function(x)
+      attr(x, 'Conv')  )
     
+    ##Need to flatten element 2 and combine everything in a single data.frame
+
+
+
     #Parameters
     names(sumPart) <- targetColumns
     sumPart <- rbindlist(sumPart,  idcol = T)
