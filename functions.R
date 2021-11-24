@@ -61,7 +61,7 @@ fitsingleDataset <- function(data,
   
   if( isMixed ) {
     SumTable <- rbind(SumTable,
-  cbind(model = 'Bayesian mixed', e$BLMM_Measured_errors)
+                      cbind(model = 'Bayesian mixed', e$BLMM_Measured_errors)
     )
   }
   
@@ -150,29 +150,29 @@ fitsinglePartitioned <-
       names(Conv) <- names(subSampled)
       Conv <- Filter(Negate(is.null), Conv)
       
-    rawConv <- lapply(seq_along(Conv),  function(y){
-      x<-list.flatten(Conv[[y]])
-      test<-lapply(seq_along(x), function(z){
-        par<- as.data.frame(x[[z]])
-        cbind.data.frame(parameter=row.names(par),par)
+      rawConv <- lapply(seq_along(Conv),  function(y){
+        x<-list.flatten(Conv[[y]])
+        test<-lapply(seq_along(x), function(z){
+          par<- as.data.frame(x[[z]])
+          cbind.data.frame(parameter=row.names(par),par)
         })
-      names(test) <-names(x)
-      rbindlist(test, fill=T, idcol='Model', use.names=T)
+        names(test) <-names(x)
+        rbindlist(test, fill=T, idcol='Model', use.names=T)
+        
+      })
       
-    })
-    
-    names(rawConv) <- names(Conv)
+      names(rawConv) <- names(Conv)
       
-    
-    ###For the full
       
-    fl<-lapply(list.flatten(attr(dt, "Conv")), function(z){
-      par<- as.data.frame(z)
-      cbind.data.frame(parameter=row.names(par),par)
-    })
-    flC<-rbindlist(fl, fill=T, idcol='Model', use.names=T)
-    
-
+      ###For the full
+      
+      fl<-lapply(list.flatten(attr(dt, "Conv")), function(z){
+        par<- as.data.frame(z)
+        cbind.data.frame(parameter=row.names(par),par)
+      })
+      flC<-rbindlist(fl, fill=T, idcol='Model', use.names=T)
+      
+      
       attr(fullDS, 'key') <- key
       attr(fullDS, 'R2s') <- R2s
       attr(fullDS, 'DICs') <- DICs
@@ -212,7 +212,7 @@ fitsinglePartitioned <-
     colnames(R2SG)[1] <- "targetMaterialColumn"
     R2full <- rbindlist(R2full, idcol = T)
     R2full$targetMaterialColumn <- R2full$.id
-
+    
     R2s <- rbindlist(list(R2full, R2SG), fill = T)
     R2s <- R2s[, c(7, 1:6)]
     colnames(R2s)[c(2, 3, 4)] <- c("dataset", "R2 type", "model")
@@ -246,9 +246,9 @@ fitsinglePartitioned <-
       attr(x, 'Conv')  )
     
     ##Need to flatten element 2 and combine everything in a single data.frame
-
-
-
+    
+    
+    
     #Parameters
     names(sumPart) <- targetColumns
     sumPart <- rbindlist(sumPart,  idcol = T)
