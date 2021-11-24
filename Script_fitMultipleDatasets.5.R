@@ -5,7 +5,12 @@ library(pbmcapply)
 library(IsoplotR)
 library(R2jags)
 library(data.table)
+library(tictoc)
 source("functions.R")
+
+tic()
+dumpfile <- file("script5messages.txt", open = "wt")
+sink(dumpfile, type = "output")
 
 #Using sample data from the app
 calData <-
@@ -35,7 +40,8 @@ testResults <- fitsinglePartitioned(
 #   ))
 
 #synData <- read.csv('RawData/Current List_Sep22_2021.csv')
-synData <- read.csv('RawData/Current List_Sep27_2021.csv')
+#synData <- read.csv('RawData/Current List_Sep27_2021.csv')
+synData <- read.csv('RawData/Current List_Nov22_2021.csv')
 synData$TempError <- ifelse(synData$TempError ==0, 1E-5, synData$TempError)
 synData$D47error <- ifelse(synData$D47error ==0, 1E-5, synData$D47error)
 
@@ -53,5 +59,9 @@ SynthesisResults <- fitsinglePartitioned(
   prefix = paste0("Synthesis_",colnames(synData)[c(15)],"_", Sys.Date())
 )
 
+sink()
 
+sink(file = "script5time.txt", type = c("output", "message"))
+toc()
+sink()
 
