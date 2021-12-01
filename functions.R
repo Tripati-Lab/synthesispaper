@@ -89,10 +89,17 @@ fitsinglePartitioned <-
         calDataSelected[calDataSelected$Material %in% names(table(calDataSelected$Material) >
                                                               2), ]
       #Full dataset
+      dt1 <-
+        fitsingleDataset(data = calData,
+                         replicates = replicates,
+                         generations = generations, isMixed = F)
+      
       dt <-
         fitsingleDataset(data = calDataSelected,
                          replicates = replicates,
                          generations = generations)
+      
+      
       #Partitioned by level
       subSampled <-
         lapply(unique(calDataSelected$Material), function(y) {
@@ -131,16 +138,31 @@ fitsinglePartitioned <-
       
       names(subSampled) <- unique(calDataSelected$Material)
       
-      fullDS <- rbind(cbind(.id = 'Full', dt) ,
+      dtT <- cbind(.id = 'Full', dt)
+      dtT <- dtT[dtT$model == "Bayesian mixed",]
+
+      fullDS <- rbind(cbind(.id = 'Full', dt1) ,dtT,
                       rbindlist(subSampled, idcol = T))
       
       R2s <- lapply(subSampled, function(x)
         attr(x, 'R2s'))
-      R2s <- list(attr(dt, "R2s"), R2s)
+      
+      r2M<-attr(dt, "R2s")
+      r2M <- r2M[r2M$Group.2 == 'BLM3_fit',]
+      r2nM <- attr(dt1, "R2s")
+      r2nM$Group.2 <- NA
+      r2B <-rbind(r2M,r2nM)
+      
+      R2s <- list(r2B, R2s)
       
       DICs <- lapply(subSampled, function(x)
         attr(x, 'DICs'))
-      DICs <- list(attr(dt, "DICs"), DICs)
+      
+      DICm<-attr(dt, "DICs")[3,]
+      DICnm<-attr(dt1, "DICs")
+      
+      DICsB <- rbind(DICnm,DICm)
+      DICs <- list(DICsB, DICs)
       
       ##Now combine convergence
       ###For part
@@ -169,9 +191,16 @@ fitsinglePartitioned <-
         par<- as.data.frame(z)
         cbind.data.frame(parameter=row.names(par),par)
       })
-      flC<-rbindlist(fl, fill=T, idcol='Model', use.names=T)
+      fl1<-lapply(list.flatten(attr(dt1, "Conv")), function(z){
+        par<- as.data.frame(z)
+        cbind.data.frame(parameter=row.names(par),par)
+      })
       
+      fl <- fl[names(fl) == "BLM3_fit"]
+      flc<-c(fl1,fl)
       
+      flC<-rbindlist(flc, fill=T, idcol='Model', use.names=T)
+
       attr(fullDS, 'key') <- key
       attr(fullDS, 'R2s') <- R2s
       attr(fullDS, 'DICs') <- DICs
