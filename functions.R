@@ -211,18 +211,22 @@ fitsinglePartitioned <-
     
     
     #Keys
-    keys <- lapply(sumPart, function(x)
-      attr(x, 'key'))
-    names(keys) <- targetColumns
-    keys <- rbindlist(keys, idcol = T)
-    samples <- as.data.frame(table(keys$original))
-    colnames(samples)[1] <- 'original'
+    # keys <- lapply(sumPart, function(x)
+    #   attr(x, 'key'))
+    # names(keys) <- targetColumns
+    # keys <- rbindlist(keys, idcol = T)
+    # samples <- as.data.frame(table(keys$original))
+    # colnames(samples)[1] <- 'original'
+    # 
+    # samples$original <- as.numeric(samples$original)
+    # keys<-as.data.frame(keys)
+    # keys<- aggregate(numeric(nrow(keys)), keys[c(".id", "original","number")], length) 
+    # colnames(keys) <- c( "targetMaterialColumn",'OriginalCode',"NumericCode",'N')
+    # keys <- keys[order(keys$targetMaterialColumn),] 
     
-    samples$original <- as.numeric(samples$original)
-    keys<-as.data.frame(keys)
-    keys<- aggregate(numeric(nrow(keys)), keys[c(".id", "original","number")], length) 
-    colnames(keys) <- c( "targetMaterialColumn",'OriginalCode',"NumericCode",'N')
-    keys <- keys[order(keys$targetMaterialColumn),] 
+    keyn <- setDT(key)[,list(Count=.N) ,names(key)]
+    #keyn <- aggregate(numeric(nrow(key)), key[c("original","number")], length) 
+    
     
     #R2s
     R2s <- lapply(sumPart, function(x)
@@ -296,7 +300,8 @@ fitsinglePartitioned <-
         ParameterSummary = sumPart,
         R2s = R2s,
         DICs = DICs,
-        keys = keys,
+        keys = keyn,
+        #keys = keys,
         Conv = Conv
       )
     
