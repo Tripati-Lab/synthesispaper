@@ -224,8 +224,9 @@ fitsinglePartitioned <-
     # colnames(keys) <- c( "targetMaterialColumn",'OriginalCode',"NumericCode",'N')
     # keys <- keys[order(keys$targetMaterialColumn),] 
     
-    keyn <- setDT(key)[,list(Count=.N) ,names(key)]
-    #keyn <- aggregate(numeric(nrow(key)), key[c("original","number")], length) 
+    #keyn <- setDT(key)[,list(Count=.N) ,names(key)]
+    key<-as.data.frame(key)
+    keyn <- aggregate(numeric(nrow(key)), key[c("original","number")], length) 
     
     
     #R2s
