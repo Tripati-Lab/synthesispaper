@@ -103,7 +103,7 @@ fitsinglePartitioned <-
                                                               2), ]
       #Full dataset
       dt1 <-
-        fitsingleDataset(data = calData,
+        fitsingleDataset(data = calDataSelected,
                          replicates = replicates,
                          generations = generations, isMixed = F)
       
