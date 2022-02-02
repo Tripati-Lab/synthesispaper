@@ -41,28 +41,39 @@ fitsingleDataset <- function(data,
       isMixed = isMixed
     )
   
-  SumTable <- rbind.data.frame(
-    cbind(model = 'York', a, material = NA),
-    cbind(model = 'LM', b, material = NA),
-    cbind(model = 'Deming', c, material = NA),
-    cbind(model = 'Weighted', d, material = NA),
-    cbind(
-      model = 'Bayesian errors',
-      e$BLM_Measured_errors,
-      material = NA
-    ),
-    cbind(
-      model = 'Bayesian no errors',
-      e$BLM_Measured_no_errors,
-      material = NA
-    ),
-    make.row.names = F
-  )
-  
   if( isMixed ) {
+    
+    SumTable <- rbind.data.frame(
+      cbind(model = 'York', a, material = NA),
+      cbind(model = 'LM', b, material = NA),
+      cbind(model = 'Deming', c, material = NA),
+      cbind(model = 'Weighted', d, material = NA),
+      make.row.names = F
+    )
+    
     SumTable <- rbind(SumTable,
                       cbind(model = 'Bayesian mixed', e$BLMM_Measured_errors)
     )
+  }else{
+    
+    SumTable <- rbind.data.frame(
+      cbind(model = 'York', a, material = NA),
+      cbind(model = 'LM', b, material = NA),
+      cbind(model = 'Deming', c, material = NA),
+      cbind(model = 'Weighted', d, material = NA),
+      cbind(
+        model = 'Bayesian errors',
+        e$BLM_Measured_errors,
+        material = NA
+      ),
+      cbind(
+        model = 'Bayesian no errors',
+        e$BLM_Measured_no_errors,
+        material = NA
+      ),
+      make.row.names = F
+    )
+    
   }
   
   attr(SumTable, "DICs") <- attr(e, "DICs")
@@ -78,6 +89,8 @@ fitsinglePartitioned <-
            maxtry = 10,
            export = T,
            prefix = 'results') {
+    
+    
     sumPart <- lapply(targetColumns, function(x) {
       calDataSelected <- calData
       calDataSelected$Material <- calData[, x]
@@ -97,7 +110,7 @@ fitsinglePartitioned <-
       dt <-
         fitsingleDataset(data = calDataSelected,
                          replicates = replicates,
-                         generations = generations)
+                         generations = generations, isMixed = T)
       
       
       #Partitioned by level
@@ -211,22 +224,22 @@ fitsinglePartitioned <-
     
     
     #Keys
-    # keys <- lapply(sumPart, function(x)
-    #   attr(x, 'key'))
-    # names(keys) <- targetColumns
-    # keys <- rbindlist(keys, idcol = T)
-    # samples <- as.data.frame(table(keys$original))
-    # colnames(samples)[1] <- 'original'
+     keys <- lapply(sumPart, function(x)
+       attr(x, 'key'))
+     names(keys) <- targetColumns
+     keys <- rbindlist(keys, idcol = T)
+     samples <- as.data.frame(table(keys$original))
+     colnames(samples)[1] <- 'original'
     # 
-    # samples$original <- as.numeric(samples$original)
-    # keys<-as.data.frame(keys)
-    # keys<- aggregate(numeric(nrow(keys)), keys[c(".id", "original","number")], length) 
-    # colnames(keys) <- c( "targetMaterialColumn",'OriginalCode',"NumericCode",'N')
-    # keys <- keys[order(keys$targetMaterialColumn),] 
+     samples$original <- as.numeric(samples$original)
+     keys<-as.data.frame(keys)
+     keys<- aggregate(numeric(nrow(keys)), keys[c(".id", "original","number")], length) 
+     colnames(keys) <- c( "targetMaterialColumn",'OriginalCode',"NumericCode",'N')
+     keys <- keys[order(keys$targetMaterialColumn),] 
     
     #keyn <- setDT(key)[,list(Count=.N) ,names(key)]
-    key<-as.data.frame(key)
-    keyn <- aggregate(numeric(nrow(key)), key[c("original","number")], length) 
+    #key<-as.data.frame(keys)
+    #keyn <- aggregate(numeric(nrow(key)), key[c("original","number")], length) 
     
     
     #R2s
@@ -295,6 +308,14 @@ fitsinglePartitioned <-
     colnames(sumPart)[c(1, 2, 6)] <-
       c('targetMaterialColumn', 'dataset', 'BLMM_material')
     sumPart <- sumPart[, c(1, 2, 6, 3:5)]
+    
+    
+    
+    sumPart <- sumPart[!grepl("[A-Za-z]", sumPart$intercept, perl = T), ]
+    sumPart <- sumPart[!grepl("[A-Za-z]", sumPart$intercept, perl = T), ]
+    
+    sumPart$intercept <- as.numeric(as.character(sumPart$intercept))
+    sumPart$slope <- as.numeric(as.character(sumPart$slope))
     
     condensed <-
       list(
