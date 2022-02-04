@@ -322,8 +322,8 @@ fitsinglePartitioned <-
         ParameterSummary = sumPart,
         R2s = R2s,
         DICs = DICs,
-        keys = keyn,
-        #keys = keys,
+        #keys = keyn,
+        keys = keys,
         Conv = Conv
       )
     

@@ -1,330 +1,14 @@
   |                                                  | 0 % ~calculating    |+++++++++++++++++++++++++                         | 50% ~00s            |++++++++++++++++++++++++++++++++++++++++++++++++++| 100% elapsed=00s  
   |                                                  | 0 % ~calculating    |+++++++++++++++++++++++++                         | 50% ~00s            |++++++++++++++++++++++++++++++++++++++++++++++++++| 100% elapsed=00s  
-  |                                                                     |   0%, ETA NA  |=================================                                 |  50%, ETA 00:00  |==============================================================| 100%, Elapsed 00:00
+  |                                                          |   0%, ETA NA  |============================                           |  50%, ETA 00:00  |===================================================| 100%, Elapsed 00:00
   |                                                  | 0 % ~calculating    |+++++++++++++++++++++++++                         | 50% ~00s            |++++++++++++++++++++++++++++++++++++++++++++++++++| 100% elapsed=00s  
-  |                                                                     |   0%, ETA NACompiling model graph
+  |                                                          |   0%, ETA NACompiling model graph
    Resolving undeclared variables
    Allocating nodes
 Graph information:
    Observed stochastic nodes: 20
    Unobserved stochastic nodes: 23
-   Total graph size: 104
-
-Initializing model
-
-Compiling model graph
-   Resolving undeclared variables
-   Allocating nodes
-Graph information:
-   Observed stochastic nodes: 20
-   Unobserved stochastic nodes: 23
-   Total graph size: 104
-
-Initializing model
-
-Compiling model graph
-   Resolving undeclared variables
-   Allocating nodes
-Graph information:
-   Observed stochastic nodes: 10
-   Unobserved stochastic nodes: 3
-   Total graph size: 40
-
-Initializing model
-
-Compiling model graph
-   Resolving undeclared variables
-   Allocating nodes
-Graph information:
-   Observed stochastic nodes: 10
-   Unobserved stochastic nodes: 3
-   Total graph size: 40
-
-Initializing model
-
-  |=================================                                 |  50%, ETA 00:01  |==============================================================| 100%, Elapsed 00:01
-  |                                                  | 0 % ~calculating    |+++++++++++++++++++++++++                         | 50% ~00s            |++++++++++++++++++++++++++++++++++++++++++++++++++| 100% elapsed=00s  
-  |                                                  | 0 % ~calculating    |+++++++++++++++++++++++++                         | 50% ~00s            |++++++++++++++++++++++++++++++++++++++++++++++++++| 100% elapsed=00s  
-  |                                                                     |   0%, ETA NA  |=================================                                 |  50%, ETA 00:00  |==============================================================| 100%, Elapsed 00:00
-  |                                                  | 0 % ~calculating    |+++++++++++++++++++++++++                         | 50% ~00s            |++++++++++++++++++++++++++++++++++++++++++++++++++| 100% elapsed=00s  
-  |                                                                     |   0%, ETA NACompiling model graph
-   Resolving undeclared variables
-   Allocating nodes
-Graph information:
-   Observed stochastic nodes: 20
-   Unobserved stochastic nodes: 35
-   Total graph size: 157
-
-Compiling model graph
-   Resolving undeclared variables
-   Allocating nodes
-Graph information:
-   Observed stochastic nodes: 20
-   Unobserved stochastic nodes: 35
-   Total graph size: 158
-
-Initializing model
-
-Initializing model
-
-  |=================================                                 |  50%, ETA 00:01  |==============================================================| 100%, Elapsed 00:01
-[1] "Material2"  "Mineralogy"
-[1] "Material2"  "Mineralogy"
-[1] "Material2"  "Mineralogy"
-[1] "Material2"  "Mineralogy"
-[1] "Material2"  "Mineralogy"
-function(data,
-                             replicates = 2,
-                             generations = 1000,
-                             isMixed=T) {
-  ##Models
-  a <- simulateYork_measured(data = data, replicates = replicates)
-  b <- simulateLM_measured(data = data, replicates = replicates)
-  c <- simulateDeming(data = data, replicates = replicates)
-  d <- simulateLM_inverseweights(data = data, replicates = replicates)
-  e <-
-    simulateBLM_measuredMaterial(
-      data = data,
-      replicates = replicates,
-      generations = generations,
-      isMixed = isMixed
-    )
-  
-  SumTable <- rbind.data.frame(
-    cbind(model = 'York', a, material = NA),
-    cbind(model = 'LM', b, material = NA),
-    cbind(model = 'Deming', c, material = NA),
-    cbind(model = 'Weighted', d, material = NA),
-    cbind(
-      model = 'Bayesian errors',
-      e$BLM_Measured_errors,
-      material = NA
-    ),
-    cbind(
-      model = 'Bayesian no errors',
-      e$BLM_Measured_no_errors,
-      material = NA
-    ),
-    make.row.names = F
-  )
-  
-  if( isMixed ) {
-    SumTable <- rbind(SumTable,
-                      cbind(model = 'Bayesian mixed', e$BLMM_Measured_errors)
-    )
-  }
-  
-  attr(SumTable, "DICs") <- attr(e, "DICs")
-  attr(SumTable, "R2s") <- attr(e, "R2s")
-  attr(SumTable, "Conv") <- attr(e, "Conv")
-  return(SumTable)
-}
-<bytecode: 0x7f830a3806d0>
-  |                                                  | 0 % ~calculating    |+++++++++++++++++++++++++                         | 50% ~00s            |++++++++++++++++++++++++++++++++++++++++++++++++++| 100% elapsed=00s  
-  |                                                  | 0 % ~calculating    |+++++++++++++++++++++++++                         | 50% ~00s            |++++++++++++++++++++++++++++++++++++++++++++++++++| 100% elapsed=00s  
-  |                                                                                                                         |   0%, ETA NA  |===========================================================                                                           |  50%, ETA 00:00  |==================================================================================================================| 100%, Elapsed 00:00
-  |                                                  | 0 % ~calculating    |+++++++++++++++++++++++++                         | 50% ~00s            |++++++++++++++++++++++++++++++++++++++++++++++++++| 100% elapsed=00s  
-  |                                                                                                                         |   0%, ETA NACompiling model graph
-   Resolving undeclared variables
-   Allocating nodes
-Graph information:
-   Observed stochastic nodes: 20
-   Unobserved stochastic nodes: 23
-   Total graph size: 102
-
-Initializing model
-
-Compiling model graph
-   Resolving undeclared variables
-   Allocating nodes
-Graph information:
-   Observed stochastic nodes: 20
-   Unobserved stochastic nodes: 23
-   Total graph size: 103
-
-Initializing model
-
-Compiling model graph
-   Resolving undeclared variables
-   Allocating nodes
-Graph information:
-   Observed stochastic nodes: 10
-   Unobserved stochastic nodes: 3
-   Total graph size: 36
-
-Compiling model graph
-   Resolving undeclared variables
-   Allocating nodes
-Graph information:
-   Observed stochastic nodes: 10
-   Unobserved stochastic nodes: 3
-   Total graph size: 38
-
-Initializing model
-
-Initializing model
-
-  |===========================================================                                                           |  50%, ETA 00:01  |==================================================================================================================| 100%, Elapsed 00:01
-                model intercept      slope material
-1                York 0.1195628 0.04903349       NA
-2                York 0.1249003 0.04771250       NA
-3                  LM 0.1152563 0.04930355       NA
-4                  LM 0.1273446 0.04757683       NA
-5              Deming 0.1258418 0.04650077       NA
-6              Deming 0.1252342 0.04654312       NA
-7            Weighted 0.1174320 0.04845976       NA
-8            Weighted 0.1163193 0.04943489       NA
-9     Bayesian errors 0.1388776 0.04594317       NA
-10    Bayesian errors 0.1288119 0.04808557       NA
-11 Bayesian no errors 0.1285177 0.04638826       NA
-12 Bayesian no errors 0.1171462 0.04906289       NA
-  |                                                  | 0 % ~calculating    |+++++++++++++++++++++++++                         | 50% ~00s            |++++++++++++++++++++++++++++++++++++++++++++++++++| 100% elapsed=00s  
-  |                                                  | 0 % ~calculating    |+++++++++++++++++++++++++                         | 50% ~00s            |++++++++++++++++++++++++++++++++++++++++++++++++++| 100% elapsed=00s  
-  |                                                                                                                         |   0%, ETA NA  |===========================================================                                                           |  50%, ETA 00:00  |==================================================================================================================| 100%, Elapsed 00:00
-  |                                                  | 0 % ~calculating    |+++++++++++++++++++++++++                         | 50% ~00s            |++++++++++++++++++++++++++++++++++++++++++++++++++| 100% elapsed=00s  
-  |                                                                                                                         |   0%, ETA NACompiling model graph
-   Resolving undeclared variables
-   Allocating nodes
-Graph information:
-   Observed stochastic nodes: 20
-   Unobserved stochastic nodes: 35
-   Total graph size: 157
-
-Initializing model
-
-Compiling model graph
-   Resolving undeclared variables
-   Allocating nodes
-Graph information:
-   Observed stochastic nodes: 20
-   Unobserved stochastic nodes: 35
-   Total graph size: 156
-
-Initializing model
-
-  |===========================================================                                                           |  50%, ETA 00:01  |==================================================================================================================| 100%, Elapsed 00:01
-  |                                                  | 0 % ~calculating  
-  |                                                  | 0 % ~calculating    |+++++++++++++++++++++++++                         | 50% ~00s            |++++++++++++++++++++++++++++++++++++++++++++++++++| 100% elapsed=00s  
-  |                                                  | 0 % ~calculating    |+++++++++++++++++++++++++                         | 50% ~00s            |++++++++++++++++++++++++++++++++++++++++++++++++++| 100% elapsed=00s  
-  |                                                                                                                         |   0%, ETA NA  |===========================================================                                                           |  50%, ETA 00:00  |==================================================================================================================| 100%, Elapsed 00:00
-  |                                                  | 0 % ~calculating    |+++++++++++++++++++++++++                         | 50% ~00s            |++++++++++++++++++++++++++++++++++++++++++++++++++| 100% elapsed=00s  
-  |                                                                                                                         |   0%, ETA NA
-   Sample.Name Mineralogy  N       D47 D47error Temperature TempError Material2
-1     Leeds 85   Dolomite 16 0.3160000 0.049810         4.1       0.2         2
-2     Leeds 86   Dolomite 11 0.3200000 0.030052         4.1       0.2         2
-3         Ab-1  Aragonite  3 0.7679185 0.011887        13.5       0.2         1
-4         Ab-2  Aragonite  3 0.7660754 0.007540        13.5       0.2         1
-5         Ab-3  Aragonite  3 0.7488922 0.023343        13.5       0.2         1
-6    Ac-1_B-12  Aragonite  6 0.7734839 0.003167        13.5       0.2         1
-7    Ac-1_B-14  Aragonite  3 0.7780872 0.006075        13.2       0.2         1
-8         Ac-2  Aragonite  3 0.7498375 0.012918        13.2       0.2         1
-9     Brach-m1    Calcite  3 0.7538596 0.002867        12.9       0.1         1
-10    Brach-m2    Calcite  3 0.7602185 0.017078        12.9       0.1         1
-  |                                                                                                                         |   0%, ETA NA
-  |                                                                                                                         |   0%, ETA NACompiling model graph
-   Resolving undeclared variables
-   Allocating nodes
-Graph information:
-   Observed stochastic nodes: 20
-   Unobserved stochastic nodes: 35
-   Total graph size: 157
-
-Initializing model
-
-Compiling model graph
-   Resolving undeclared variables
-   Allocating nodes
-Graph information:
-   Observed stochastic nodes: 20
-   Unobserved stochastic nodes: 35
-   Total graph size: 157
-
-Initializing model
-
-  |===========================================================                                                           |  50%, ETA 00:01  |==================================================================================================================| 100%, Elapsed 00:01
-$BLM_Measured_errors
-     [,1]
-[1,]   NA
-[2,]   NA
-
-$BLM_Measured_no_errors
-     [,1]
-[1,]   NA
-[2,]   NA
-
-$BLMM_Measured_errors
-            intercept        slope material
-alpha[1]   0.84762631 -0.007329716        2
-alpha[2]  -0.06959288  0.093120521        1
-alpha[1]1 -0.59235770  0.101545513        2
-alpha[2]1  0.11094260  0.049154864        1
-
-attr(,"R2s")
-      Group.1           Group.2     median        lwr        upr
-1 Conditional          BLM1_fit 0.55409197 0.54112074 0.56706321
-2 Conditional BLM1_fit_NoErrors 0.55409197 0.54112074 0.56706321
-3 Conditional          BLM3_fit 0.97641656 0.97564103 0.97719208
-4    Marginal          BLM3_fit 0.03821506 0.03816764 0.03826247
-attr(,"DICs")
-         median       lwr       upr             model
-2.5%  -37.70234 -40.18215 -35.22253          BLM1_fit
-2.5%1 -37.70234 -40.18215 -35.22253 BLM1_fit_NoErrors
-2.5%2 -37.70234 -40.18215 -35.22253          BLM3_fit
-attr(,"Conv")
-attr(,"Conv")[[1]]
-attr(,"Conv")[[1]]$BLM3_fit
-                      mean        sd          2.5%          25%           50%          75%       97.5%     Rhat n.eff
-alpha[1]        0.99735577 1.3839731  -1.350774881  -0.02997520   0.847626307   1.96443409   4.0671079 1.274810    13
-alpha[2]       -0.03330674 1.3819632  -2.324143151  -1.25737973  -0.069592878   1.08465793   2.3234879 2.168943     5
-beta[1]        -0.01844963 0.1054051  -0.252578603  -0.09334763  -0.007329716   0.06039387   0.1610182 1.274130    13
-beta[2]         0.08547879 0.3363391  -0.489308614  -0.18346938   0.093120521   0.38918003   0.6403552 2.173216     5
-conditionalR2   0.92498545 0.1175025   0.576184881   0.92568361   0.975600214   0.98970375   0.9963084 1.008429   650
-deviance      -59.59344154 6.2162888 -70.104405322 -64.07310179 -60.033722263 -55.93704878 -46.0335696 1.003422   590
-marginalR2      0.11378273 0.1655105   0.005383616   0.01776773   0.038264963   0.12542005   0.6402537 1.003287   610
-
-
-attr(,"Conv")[[2]]
-attr(,"Conv")[[2]]$BLM3_fit
-                      mean         sd          2.5%          25%          50%           75%       97.5%     Rhat n.eff
-alpha[1]       -0.61086240 0.89578495  -2.269903643  -1.21929704  -0.59235770  -0.002984809   1.1676503 1.660491     6
-alpha[2]        0.04873538 0.89838116  -1.721899971  -0.63565910   0.11094260   0.708673868   1.7460513 1.222889    14
-beta[1]         0.10334045 0.06736023  -0.030444127   0.05865036   0.10154551   0.149401463   0.2276405 1.654338     6
-beta[2]         0.06557663 0.21852243  -0.341550833  -0.09512420   0.04915486   0.232851737   0.4911146 1.222885    14
-conditionalR2   0.93054363 0.10996601   0.590109229   0.92673220   0.97723290   0.990570972   0.9964336 1.007515  1500
-deviance      -54.32355635 6.19897435 -64.383893417 -58.81854346 -54.92671118 -50.792328574 -39.4193239 1.000401  1500
-marginalR2      0.11929010 0.17019334   0.006152812   0.01706799   0.03816515   0.139091980   0.6342036 1.001878  1100
-
-
-   model intercept      slope material
-a   York 0.1188640 0.04893807       NA
-a1  York 0.1301263 0.04816372       NA
-     [,1]
-[1,]   NA
-[2,]   NA
-                   model   intercept        slope material
-1                   York  0.11886396  0.048938066       NA
-2                   York  0.13012628  0.048163716       NA
-3                     LM  0.11822543  0.048880591       NA
-4                     LM  0.62972209  0.009601985       NA
-5                 Deming  0.12911522  0.046607253       NA
-6                 Deming  0.86796237 -0.008709301       NA
-7               Weighted  0.11375009  0.049335890       NA
-8               Weighted  0.12428014  0.047736554       NA
-alpha[1]  Bayesian mixed  0.84762631 -0.007329716        2
-alpha[2]  Bayesian mixed -0.06959288  0.093120521        1
-alpha[1]1 Bayesian mixed -0.59235770  0.101545513        2
-alpha[2]1 Bayesian mixed  0.11094260  0.049154864        1
-  |                                                  | 0 % ~calculating    |+++++++++++++++++++++++++                         | 50% ~00s            |++++++++++++++++++++++++++++++++++++++++++++++++++| 100% elapsed=00s  
-  |                                                  | 0 % ~calculating    |+++++++++++++++++++++++++                         | 50% ~00s            |++++++++++++++++++++++++++++++++++++++++++++++++++| 100% elapsed=00s  
-  |                                                                                                                         |   0%, ETA NA  |===========================================================                                                           |  50%, ETA 00:00  |==================================================================================================================| 100%, Elapsed 00:00
-  |                                                  | 0 % ~calculating    |+++++++++++++++++++++++++                         | 50% ~00s            |++++++++++++++++++++++++++++++++++++++++++++++++++| 100% elapsed=00s  
-  |                                                                                                                         |   0%, ETA NACompiling model graph
-   Resolving undeclared variables
-   Allocating nodes
-Graph information:
-   Observed stochastic nodes: 20
-   Unobserved stochastic nodes: 23
-   Total graph size: 104
+   Total graph size: 105
 
 Compiling model graph
    Resolving undeclared variables
@@ -352,18 +36,18 @@ Compiling model graph
 Graph information:
    Observed stochastic nodes: 10
    Unobserved stochastic nodes: 3
-   Total graph size: 38
+   Total graph size: 40
 
 Initializing model
 
 Initializing model
 
-  |===========================================================                                                           |  50%, ETA 00:00  |==================================================================================================================| 100%, Elapsed 00:00
+  |============================                           |  50%, ETA 00:00  |===================================================| 100%, Elapsed 00:00
   |                                                  | 0 % ~calculating    |+++++++++++++++++++++++++                         | 50% ~00s            |++++++++++++++++++++++++++++++++++++++++++++++++++| 100% elapsed=00s  
   |                                                  | 0 % ~calculating    |+++++++++++++++++++++++++                         | 50% ~00s            |++++++++++++++++++++++++++++++++++++++++++++++++++| 100% elapsed=00s  
-  |                                                                                                                         |   0%, ETA NA  |===========================================================                                                           |  50%, ETA 00:00  |==================================================================================================================| 100%, Elapsed 00:00
+  |                                                          |   0%, ETA NA  |===================================================| 100%, Elapsed 00:00
   |                                                  | 0 % ~calculating    |+++++++++++++++++++++++++                         | 50% ~00s            |++++++++++++++++++++++++++++++++++++++++++++++++++| 100% elapsed=00s  
-  |                                                                                                                         |   0%, ETA NACompiling model graph
+  |                                                          |   0%, ETA NACompiling model graph
    Resolving undeclared variables
    Allocating nodes
 Graph information:
@@ -383,90 +67,7 @@ Initializing model
 
 Initializing model
 
-  |===========================================================                                                           |  50%, ETA 00:00  |==================================================================================================================| 100%, Elapsed 00:00
-                   model  intercept       slope material
-1                   York  0.1782202  0.04464553       NA
-2                   York  0.1318359  0.04796477       NA
-3                     LM  0.1174552  0.04850844       NA
-4                     LM  0.1215942  0.04800504       NA
-5                 Deming  0.1292364  0.04655312       NA
-6                 Deming  0.1291148  0.04657393       NA
-7               Weighted  0.1221116  0.04830144       NA
-8               Weighted  0.1215198  0.04821695       NA
-alpha[1]  Bayesian mixed  0.5735201  0.01267148        2
-alpha[2]  Bayesian mixed  0.0992888  0.05358899        1
-alpha[1]1 Bayesian mixed -0.2496626  0.07751399        2
-alpha[2]1 Bayesian mixed  0.4864622 -0.04149183        1
-  |                                                  | 0 % ~calculating    |+++++++++++++++++++++++++                         | 50% ~00s            |++++++++++++++++++++++++++++++++++++++++++++++++++| 100% elapsed=00s  
-  |                                                  | 0 % ~calculating    |+++++++++++++++++++++++++                         | 50% ~00s            |++++++++++++++++++++++++++++++++++++++++++++++++++| 100% elapsed=00s  
-  |                                                                                                                         |   0%, ETA NA  |===========================================================                                                           |  50%, ETA 00:00  |==================================================================================================================| 100%, Elapsed 00:00
-  |                                                  | 0 % ~calculating    |+++++++++++++++++++++++++                         | 50% ~00s            |++++++++++++++++++++++++++++++++++++++++++++++++++| 100% elapsed=00s  
-  |                                                                                                                         |   0%, ETA NACompiling model graph
-   Resolving undeclared variables
-   Allocating nodes
-Graph information:
-   Observed stochastic nodes: 20
-   Unobserved stochastic nodes: 23
-   Total graph size: 103
-
-Compiling model graph
-   Resolving undeclared variables
-   Allocating nodes
-Graph information:
-   Observed stochastic nodes: 20
-   Unobserved stochastic nodes: 23
-   Total graph size: 102
-
-Initializing model
-
-Initializing model
-
-Compiling model graph
-   Resolving undeclared variables
-   Allocating nodes
-Graph information:
-   Observed stochastic nodes: 10
-   Unobserved stochastic nodes: 3
-   Total graph size: 38
-
-Compiling model graph
-   Resolving undeclared variables
-   Allocating nodes
-Graph information:
-   Observed stochastic nodes: 10
-   Unobserved stochastic nodes: 3
-   Total graph size: 38
-
-Initializing model
-
-Initializing model
-
-  |===========================================================                                                           |  50%, ETA 00:00  |==================================================================================================================| 100%, Elapsed 00:00
-  |                                                  | 0 % ~calculating    |+++++++++++++++++++++++++                         | 50% ~00s            |++++++++++++++++++++++++++++++++++++++++++++++++++| 100% elapsed=00s  
-  |                                                  | 0 % ~calculating    |+++++++++++++++++++++++++                         | 50% ~00s            |++++++++++++++++++++++++++++++++++++++++++++++++++| 100% elapsed=00s  
-  |                                                                                                                         |   0%, ETA NA  |===========================================================                                                           |  50%, ETA 00:00  |==================================================================================================================| 100%, Elapsed 00:00
-  |                                                  | 0 % ~calculating    |+++++++++++++++++++++++++                         | 50% ~00s            |++++++++++++++++++++++++++++++++++++++++++++++++++| 100% elapsed=00s  
-  |                                                                                                                         |   0%, ETA NACompiling model graph
-   Resolving undeclared variables
-   Allocating nodes
-Graph information:
-   Observed stochastic nodes: 20
-   Unobserved stochastic nodes: 35
-   Total graph size: 156
-
-Compiling model graph
-   Resolving undeclared variables
-   Allocating nodes
-Graph information:
-   Observed stochastic nodes: 20
-   Unobserved stochastic nodes: 35
-   Total graph size: 154
-
-Initializing model
-
-Initializing model
-
-  |===========================================================                                                           |  50%, ETA 00:00  |==================================================================================================================| 100%, Elapsed 00:00
+  |============================                           |  50%, ETA 00:00  |===================================================| 100%, Elapsed 00:00
   |                                                  | 0 % ~calculating  
   |                                                  | 0 % ~calculating  
   |                                                  | 0 % ~calculating  
@@ -481,15 +82,15 @@ Initializing model
   |                                                  | 0 % ~calculating  
   |                                                  | 0 % ~calculating    |+++++++++++++++++++++++++                         | 50% ~00s            |++++++++++++++++++++++++++++++++++++++++++++++++++| 100% elapsed=00s  
   |                                                  | 0 % ~calculating    |+++++++++++++++++++++++++                         | 50% ~00s            |++++++++++++++++++++++++++++++++++++++++++++++++++| 100% elapsed=00s  
-  |                                                                                                                         |   0%, ETA NA  |===========================================================                                                           |  50%, ETA 00:00  |==================================================================================================================| 100%, Elapsed 00:00
+  |                                                          |   0%, ETA NA  |============================                           |  50%, ETA 00:00  |===================================================| 100%, Elapsed 00:00
   |                                                  | 0 % ~calculating    |+++++++++++++++++++++++++                         | 50% ~00s            |++++++++++++++++++++++++++++++++++++++++++++++++++| 100% elapsed=00s  
-  |                                                                                                                         |   0%, ETA NACompiling model graph
+  |                                                          |   0%, ETA NACompiling model graph
    Resolving undeclared variables
    Allocating nodes
 Graph information:
    Observed stochastic nodes: 16
    Unobserved stochastic nodes: 19
-   Total graph size: 86
+   Total graph size: 87
 
 Compiling model graph
    Resolving undeclared variables
@@ -509,7 +110,7 @@ Compiling model graph
 Graph information:
    Observed stochastic nodes: 8
    Unobserved stochastic nodes: 3
-   Total graph size: 32
+   Total graph size: 34
 
 Compiling model graph
    Resolving undeclared variables
@@ -523,26 +124,26 @@ Initializing model
 
 Initializing model
 
-  |===========================================================                                                           |  50%, ETA 00:00  |==================================================================================================================| 100%, Elapsed 00:00
+  |===================================================| 100%, Elapsed 00:00
   |                                                  | 0 % ~calculating    |+++++++++++++++++++++++++                         | 50% ~00s            |++++++++++++++++++++++++++++++++++++++++++++++++++| 100% elapsed=00s  
   |                                                  | 0 % ~calculating    |+++++++++++++++++++++++++                         | 50% ~00s            |++++++++++++++++++++++++++++++++++++++++++++++++++| 100% elapsed=00s  
-  |                                                                                                                         |   0%, ETA NA  |===========================================================                                                           |  50%, ETA 00:00  |==================================================================================================================| 100%, Elapsed 00:00
+  |                                                          |   0%, ETA NA  |============================                           |  50%, ETA 00:00  |===================================================| 100%, Elapsed 00:00
   |                                                  | 0 % ~calculating    |+++++++++++++++++++++++++                         | 50% ~00s            |++++++++++++++++++++++++++++++++++++++++++++++++++| 100% elapsed=00s  
-  |                                                                                                                         |   0%, ETA NACompiling model graph
+  |                                                          |   0%, ETA NACompiling model graph
    Resolving undeclared variables
    Allocating nodes
 Graph information:
-   Observed stochastic nodes: 20
-   Unobserved stochastic nodes: 23
-   Total graph size: 104
+   Observed stochastic nodes: 18
+   Unobserved stochastic nodes: 21
+   Total graph size: 97
 
 Compiling model graph
    Resolving undeclared variables
    Allocating nodes
 Graph information:
-   Observed stochastic nodes: 20
-   Unobserved stochastic nodes: 23
-   Total graph size: 104
+   Observed stochastic nodes: 18
+   Unobserved stochastic nodes: 21
+   Total graph size: 97
 
 Initializing model
 
@@ -552,34 +153,34 @@ Compiling model graph
    Resolving undeclared variables
    Allocating nodes
 Graph information:
-   Observed stochastic nodes: 10
+   Observed stochastic nodes: 9
+   Unobserved stochastic nodes: 3
+   Total graph size: 36
+
+Compiling model graph
+   Resolving undeclared variables
+   Allocating nodes
+Graph information:
+   Observed stochastic nodes: 9
    Unobserved stochastic nodes: 3
    Total graph size: 38
 
-Compiling model graph
-   Resolving undeclared variables
-   Allocating nodes
-Graph information:
-   Observed stochastic nodes: 10
-   Unobserved stochastic nodes: 3
-   Total graph size: 40
-
 Initializing model
 
 Initializing model
 
-  |===========================================================                                                           |  50%, ETA 00:00  |==================================================================================================================| 100%, Elapsed 00:00
+  |============================                           |  50%, ETA 00:00  |===================================================| 100%, Elapsed 00:00
   |                                                  | 0 % ~calculating    |+++++++++++++++++++++++++                         | 50% ~00s            |++++++++++++++++++++++++++++++++++++++++++++++++++| 100% elapsed=00s  
   |                                                  | 0 % ~calculating    |+++++++++++++++++++++++++                         | 50% ~00s            |++++++++++++++++++++++++++++++++++++++++++++++++++| 100% elapsed=00s  
-  |                                                                                                                         |   0%, ETA NA  |===========================================================                                                           |  50%, ETA 00:00  |==================================================================================================================| 100%, Elapsed 00:00
+  |                                                          |   0%, ETA NA  |============================                           |  50%, ETA 00:00  |===================================================| 100%, Elapsed 00:00
   |                                                  | 0 % ~calculating    |+++++++++++++++++++++++++                         | 50% ~00s            |++++++++++++++++++++++++++++++++++++++++++++++++++| 100% elapsed=00s  
-  |                                                                                                                         |   0%, ETA NACompiling model graph
+  |                                                          |   0%, ETA NACompiling model graph
    Resolving undeclared variables
    Allocating nodes
 Graph information:
    Observed stochastic nodes: 18
    Unobserved stochastic nodes: 34
-   Total graph size: 148
+   Total graph size: 149
 
 Compiling model graph
    Resolving undeclared variables
@@ -587,13 +188,13 @@ Compiling model graph
 Graph information:
    Observed stochastic nodes: 18
    Unobserved stochastic nodes: 34
-   Total graph size: 147
+   Total graph size: 149
 
 Initializing model
 
 Initializing model
 
-  |===========================================================                                                           |  50%, ETA 00:00  |==================================================================================================================| 100%, Elapsed 00:00
+  |============================                           |  50%, ETA 00:00  |===================================================| 100%, Elapsed 00:00
   |                                                  | 0 % ~calculating  
   |                                                  | 0 % ~calculating  
   |                                                  | 0 % ~calculating  
@@ -607,39 +208,38 @@ Initializing model
   |                                                  | 0 % ~calculating  
   |                                                  | 0 % ~calculating  
   |                                                  | 0 % ~calculating    |+++++++++++++++++++++++++                         | 50% ~00s            |++++++++++++++++++++++++++++++++++++++++++++++++++| 100% elapsed=00s  
-  |                                                  | 0 % ~calculating    |+++++++++++++++++++++++++                         | 50% ~00s            |++++++++++++++++++++++++++++++++++++++++++++++++++| 100% elapsed=00s  
-  |                                                                                                                         |   0%, ETA NA  |===========================================================                                                           |  50%, ETA 00:00  |==================================================================================================================| 100%, Elapsed 00:00
-  |                                                  | 0 % ~calculating  
-  |                                                  | 0 % ~calculating    |+++++++++++++++++++++++++                         | 50% ~00s            |++++++++++++++++++++++++++++++++++++++++++++++++++| 100% elapsed=00s  
-  |                                                  | 0 % ~calculating    |+++++++++++++++++++++++++                         | 50% ~00s            |++++++++++++++++++++++++++++++++++++++++++++++++++| 100% elapsed=00s  
-  |                                                                                                                         |   0%, ETA NA  |===========================================================                                                           |  50%, ETA 00:00
-  |                                                  | 0 % ~calculating  
-  |                                                  | 0 % ~calculating    |+++++++++++++++++++++++++                         | 50% ~00s            |++++++++++++++++++++++++++++++++++++++++++++++++++| 100% elapsed=00s  
-  |                                                  | 0 % ~calculating    |+++++++++++++++++++++++++                         | 50% ~00s            |++++++++++++++++++++++++++++++++++++++++++++++++++| 100% elapsed=00s  
-  |                                                                                                                         |   0%, ETA NA  |===========================================================                                                           |  50%, ETA 00:00  |==================================================================================================================| 100%, Elapsed 00:00
-  |                                                  | 0 % ~calculating  
-  |                                                  | 0 % ~calculating  
-  |                                                  | 0 % ~calculating    |+++++++++++++++++++++++++                         | 50% ~00s            |++++++++++++++++++++++++++++++++++++++++++++++++++| 100% elapsed=00s  
-  |                                                  | 0 % ~calculating    |+++++++++++++++++++++++++                         | 50% ~00s            |++++++++++++++++++++++++++++++++++++++++++++++++++| 100% elapsed=00s  
-  |                                                                                                                         |   0%, ETA NA  |===========================================================                                                           |  50%, ETA 00:00  |==================================================================================================================| 100%, Elapsed 00:00
-  |                                                  | 0 % ~calculating  
   |                                                  | 0 % ~calculating    |+++++++++++++++++++++++++                         | 50% ~00s          
   |                                                  | 0 % ~calculating    |+++++++++++++++++++++++++                         | 50% ~00s            |++++++++++++++++++++++++++++++++++++++++++++++++++| 100% elapsed=00s  
   |                                                  | 0 % ~calculating    |+++++++++++++++++++++++++                         | 50% ~00s            |++++++++++++++++++++++++++++++++++++++++++++++++++| 100% elapsed=00s  
-  |                                                                                                                         |   0%, ETA NA  |===========================================================                                                           |  50%, ETA 00:00
+  |                                                          |   0%, ETA NA  |============================                           |  50%, ETA 00:00  |===================================================| 100%, Elapsed 00:00
   |                                                  | 0 % ~calculating  
+  |                                                  | 0 % ~calculating    |+++++++++++++++++++++++++                         | 50% ~00s            |++++++++++++++++++++++++++++++++++++++++++++++++++| 100% elapsed=00s  
+  |                                                  | 0 % ~calculating    |+++++++++++++++++++++++++                         | 50% ~00s            |++++++++++++++++++++++++++++++++++++++++++++++++++| 100% elapsed=00s  
+  |                                                          |   0%, ETA NA  |============================                           |  50%, ETA 00:00  |===================================================| 100%, Elapsed 00:00
+  |                                                  | 0 % ~calculating  
+  |                                                  | 0 % ~calculating    |+++++++++++++++++++++++++                         | 50% ~00s            |++++++++++++++++++++++++++++++++++++++++++++++++++| 100% elapsed=00s  
+  |                                                  | 0 % ~calculating    |+++++++++++++++++++++++++                         | 50% ~00s            |++++++++++++++++++++++++++++++++++++++++++++++++++| 100% elapsed=00s  
+  |                                                          |   0%, ETA NA  |============================                           |  50%, ETA 00:00  |===================================================| 100%, Elapsed 00:00
   |                                                  | 0 % ~calculating    |+++++++++++++++++++++++++                         | 50% ~00s          
   |                                                  | 0 % ~calculating    |+++++++++++++++++++++++++                         | 50% ~00s            |++++++++++++++++++++++++++++++++++++++++++++++++++| 100% elapsed=00s  
   |                                                  | 0 % ~calculating    |+++++++++++++++++++++++++                         | 50% ~00s          
   |                                                  | 0 % ~calculating    |+++++++++++++++++++++++++                         | 50% ~00s            |++++++++++++++++++++++++++++++++++++++++++++++++++| 100% elapsed=00s  
   |                                                  | 0 % ~calculating    |+++++++++++++++++++++++++                         | 50% ~00s            |++++++++++++++++++++++++++++++++++++++++++++++++++| 100% elapsed=00s  
-  |                                                                                                                         |   0%, ETA NA  |===========================================================                                                           |  50%, ETA 00:00  |==================================================================================================================| 100%, Elapsed 00:00
+  |                                                          |   0%, ETA NA  |============================                           |  50%, ETA 00:00
   |                                                  | 0 % ~calculating    |+++++++++++++++++++++++++                         | 50% ~00s          
   |                                                  | 0 % ~calculating    |+++++++++++++++++++++++++                         | 50% ~00s            |++++++++++++++++++++++++++++++++++++++++++++++++++| 100% elapsed=00s  
   |                                                  | 0 % ~calculating    |+++++++++++++++++++++++++                         | 50% ~00s            |++++++++++++++++++++++++++++++++++++++++++++++++++| 100% elapsed=00s  
-  |                                                                                                                         |   0%, ETA NA  |===========================================================                                                           |  50%, ETA 00:00  |==================================================================================================================| 100%, Elapsed 00:00
+  |                                                          |   0%, ETA NA  |============================                           |  50%, ETA 00:00
+  |                                                  | 0 % ~calculating    |+++++++++++++++++++++++++                         | 50% ~00s          
   |                                                  | 0 % ~calculating    |+++++++++++++++++++++++++                         | 50% ~00s            |++++++++++++++++++++++++++++++++++++++++++++++++++| 100% elapsed=00s  
-  |                                                                                                                         |   0%, ETA NACompiling model graph
+  |                                                  | 0 % ~calculating    |+++++++++++++++++++++++++                         | 50% ~00s            |++++++++++++++++++++++++++++++++++++++++++++++++++| 100% elapsed=00s  
+  |                                                          |   0%, ETA NA  |============================                           |  50%, ETA 00:00  |===================================================| 100%, Elapsed 00:00
+  |                                                  | 0 % ~calculating  
+  |                                                  | 0 % ~calculating    |+++++++++++++++++++++++++                         | 50% ~00s            |++++++++++++++++++++++++++++++++++++++++++++++++++| 100% elapsed=00s  
+  |                                                  | 0 % ~calculating    |+++++++++++++++++++++++++                         | 50% ~00s            |++++++++++++++++++++++++++++++++++++++++++++++++++| 100% elapsed=00s  
+  |                                                          |   0%, ETA NA
+  |                                                  | 0 % ~calculating    |+++++++++++++++++++++++++                         | 50% ~00s            |++++++++++++++++++++++++++++++++++++++++++++++++++| 100% elapsed=00s  
+  |                                                          |   0%, ETA NACompiling model graph
    Resolving undeclared variables
    Allocating nodes
 Graph information:
@@ -665,7 +265,7 @@ Compiling model graph
 Graph information:
    Observed stochastic nodes: 6
    Unobserved stochastic nodes: 3
-   Total graph size: 28
+   Total graph size: 26
 
 Compiling model graph
    Resolving undeclared variables
@@ -679,7 +279,16 @@ Initializing model
 
 Initializing model
 
-  |===========================================================                                                           |  50%, ETA 00:00  |==================================================================================================================| 100%, Elapsed 00:00
+  |============================                           |  50%, ETA 00:00  |===================================================| 100%, Elapsed 00:00
+  |                                                  | 0 % ~calculating    |+++++++++++++++++++++++++                         | 50% ~00s            |++++++++++++++++++++++++++++++++++++++++++++++++++| 100% elapsed=00s  
+  |                                                  | 0 % ~calculating  
+  |                                                  | 0 % ~calculating    |+++++++++++++++++++++++++                         | 50% ~00s            |++++++++++++++++++++++++++++++++++++++++++++++++++| 100% elapsed=00s  
+  |                                                  | 0 % ~calculating    |+++++++++++++++++++++++++                         | 50% ~00s            |++++++++++++++++++++++++++++++++++++++++++++++++++| 100% elapsed=00s  
+  |                                                          |   0%, ETA NA  |============================                           |  50%, ETA 00:00  |===================================================| 100%, Elapsed 00:00
+  |                                                  | 0 % ~calculating  
+  |                                                  | 0 % ~calculating    |+++++++++++++++++++++++++                         | 50% ~00s            |++++++++++++++++++++++++++++++++++++++++++++++++++| 100% elapsed=00s  
+  |                                                  | 0 % ~calculating    |+++++++++++++++++++++++++                         | 50% ~00s            |++++++++++++++++++++++++++++++++++++++++++++++++++| 100% elapsed=00s  
+  |                                                          |   0%, ETA NA  |============================                           |  50%, ETA 00:00  |===================================================| 100%, Elapsed 00:00
   |                                                  | 0 % ~calculating  
   |                                                  | 0 % ~calculating  
   |                                                  | 0 % ~calculating  
@@ -692,3 +301,299 @@ Initializing model
   |                                                  | 0 % ~calculating  
   |                                                  | 0 % ~calculating  
   |                                                  | 0 % ~calculating  
+  |                                                  | 0 % ~calculating  
+  |                                                  | 0 % ~calculating    |+++++++++++++++++++++++++                         | 50% ~00s            |++++++++++++++++++++++++++++++++++++++++++++++++++| 100% elapsed=00s  
+  |                                                  | 0 % ~calculating    |+++++++++++++++++++++++++                         | 50% ~00s            |++++++++++++++++++++++++++++++++++++++++++++++++++| 100% elapsed=00s  
+  |                                                          |   0%, ETA NA  |============================                           |  50%, ETA 00:01  |===================================================| 100%, Elapsed 00:01
+  |                                                  | 0 % ~calculating    |+++++++++++++++++++++++++                         | 50% ~00s            |++++++++++++++++++++++++++++++++++++++++++++++++++| 100% elapsed=00s  
+  |                                                          |   0%, ETA NACompiling model graph
+   Resolving undeclared variables
+   Allocating nodes
+Graph information:
+   Observed stochastic nodes: 1390
+   Unobserved stochastic nodes: 1393
+   Total graph size: 5772
+
+Compiling model graph
+   Resolving undeclared variables
+   Allocating nodes
+Graph information:
+   Observed stochastic nodes: 1390
+   Unobserved stochastic nodes: 1393
+   Total graph size: 5774
+
+Initializing model
+
+Initializing model
+
+Compiling model graph
+   Resolving undeclared variables
+   Allocating nodes
+Graph information:
+   Observed stochastic nodes: 695
+   Unobserved stochastic nodes: 3
+   Total graph size: 1692
+
+Compiling model graph
+   Resolving undeclared variables
+   Allocating nodes
+Graph information:
+   Observed stochastic nodes: 695
+   Unobserved stochastic nodes: 3
+   Total graph size: 1682
+
+Initializing model
+
+Initializing model
+
+  |============================                           |  50%, ETA 00:02  |===================================================| 100%, Elapsed 00:02
+  |                                                  | 0 % ~calculating    |+++++++++++++++++++++++++                         | 50% ~00s            |++++++++++++++++++++++++++++++++++++++++++++++++++| 100% elapsed=00s  
+  |                                                  | 0 % ~calculating    |+++++++++++++++++++++++++                         | 50% ~00s            |++++++++++++++++++++++++++++++++++++++++++++++++++| 100% elapsed=00s  
+  |                                                          |   0%, ETA NA  |============================                           |  50%, ETA 00:01  |===================================================| 100%, Elapsed 00:01
+  |                                                  | 0 % ~calculating    |+++++++++++++++++++++++++                         | 50% ~00s            |++++++++++++++++++++++++++++++++++++++++++++++++++| 100% elapsed=00s  
+  |                                                          |   0%, ETA NACompiling model graph
+   Resolving undeclared variables
+   Allocating nodes
+Graph information:
+   Observed stochastic nodes: 1390
+   Unobserved stochastic nodes: 2096
+   Total graph size: 7881
+
+Compiling model graph
+   Resolving undeclared variables
+   Allocating nodes
+Graph information:
+   Observed stochastic nodes: 1390
+   Unobserved stochastic nodes: 2096
+   Total graph size: 7885
+
+Initializing model
+
+Initializing model
+
+  |============================                           |  50%, ETA 00:02  |===================================================| 100%, Elapsed 00:02
+  |                                                  | 0 % ~calculating    |+++++++++++++++++++++++++                         | 50% ~00s            |++++++++++++++++++++++++++++++++++++++++++++++++++| 100% elapsed=00s  
+  |                                                  | 0 % ~calculating    |+++++++++++++++++++++++++                         | 50% ~00s            |++++++++++++++++++++++++++++++++++++++++++++++++++| 100% elapsed=00s  
+  |                                                          |   0%, ETA NA  |============================                           |  50%, ETA 00:00  |===================================================| 100%, Elapsed 00:00
+  |                                                  | 0 % ~calculating    |+++++++++++++++++++++++++                         | 50% ~00s            |++++++++++++++++++++++++++++++++++++++++++++++++++| 100% elapsed=00s  
+  |                                                          |   0%, ETA NACompiling model graph
+   Resolving undeclared variables
+   Allocating nodes
+Graph information:
+   Observed stochastic nodes: 38
+   Unobserved stochastic nodes: 41
+   Total graph size: 181
+
+Compiling model graph
+   Resolving undeclared variables
+   Allocating nodes
+Graph information:
+   Observed stochastic nodes: 38
+   Unobserved stochastic nodes: 41
+   Total graph size: 183
+
+Initializing model
+
+Initializing model
+
+Compiling model graph
+   Resolving undeclared variables
+   Allocating nodes
+Graph information:
+   Observed stochastic nodes: 19
+   Unobserved stochastic nodes: 3
+   Total graph size: 56
+
+Compiling model graph
+   Resolving undeclared variables
+   Allocating nodes
+Graph information:
+   Observed stochastic nodes: 19
+   Unobserved stochastic nodes: 3
+   Total graph size: 58
+
+Initializing model
+
+Initializing model
+
+  |===================================================| 100%, Elapsed 00:00
+  |                                                  | 0 % ~calculating    |+++++++++++++++++++++++++                         | 50% ~00s            |++++++++++++++++++++++++++++++++++++++++++++++++++| 100% elapsed=00s  
+  |                                                  | 0 % ~calculating    |+++++++++++++++++++++++++                         | 50% ~00s            |++++++++++++++++++++++++++++++++++++++++++++++++++| 100% elapsed=00s  
+  |                                                          |   0%, ETA NA  |============================                           |  50%, ETA 00:00  |===================================================| 100%, Elapsed 00:00
+  |                                                  | 0 % ~calculating    |+++++++++++++++++++++++++                         | 50% ~00s            |++++++++++++++++++++++++++++++++++++++++++++++++++| 100% elapsed=00s  
+  |                                                          |   0%, ETA NACompiling model graph
+   Resolving undeclared variables
+   Allocating nodes
+Graph information:
+   Observed stochastic nodes: 174
+   Unobserved stochastic nodes: 177
+   Total graph size: 789
+
+Compiling model graph
+   Resolving undeclared variables
+   Allocating nodes
+Graph information:
+   Observed stochastic nodes: 174
+   Unobserved stochastic nodes: 177
+   Total graph size: 790
+
+Initializing model
+
+Initializing model
+
+Compiling model graph
+   Resolving undeclared variables
+   Allocating nodes
+Graph information:
+   Observed stochastic nodes: 87
+   Unobserved stochastic nodes: 3
+   Total graph size: 264
+
+Compiling model graph
+   Resolving undeclared variables
+   Allocating nodes
+Graph information:
+   Observed stochastic nodes: 87
+   Unobserved stochastic nodes: 3
+   Total graph size: 260
+
+Initializing model
+
+Initializing model
+
+  |============================                           |  50%, ETA 00:00  |===================================================| 100%, Elapsed 00:00
+  |                                                  | 0 % ~calculating    |+++++++++++++++++++++++++                         | 50% ~00s            |++++++++++++++++++++++++++++++++++++++++++++++++++| 100% elapsed=00s  
+  |                                                  | 0 % ~calculating    |+++++++++++++++++++++++++                         | 50% ~00s            |++++++++++++++++++++++++++++++++++++++++++++++++++| 100% elapsed=00s  
+  |                                                          |   0%, ETA NA  |============================                           |  50%, ETA 00:01  |===================================================| 100%, Elapsed 00:01
+  |                                                  | 0 % ~calculating    |+++++++++++++++++++++++++                         | 50% ~00s            |++++++++++++++++++++++++++++++++++++++++++++++++++| 100% elapsed=00s  
+  |                                                          |   0%, ETA NACompiling model graph
+   Resolving undeclared variables
+   Allocating nodes
+Graph information:
+   Observed stochastic nodes: 1106
+   Unobserved stochastic nodes: 1109
+   Total graph size: 4649
+
+Compiling model graph
+   Resolving undeclared variables
+   Allocating nodes
+Graph information:
+   Observed stochastic nodes: 1106
+   Unobserved stochastic nodes: 1109
+   Total graph size: 4652
+
+Initializing model
+
+Initializing model
+
+Compiling model graph
+   Resolving undeclared variables
+   Allocating nodes
+Graph information:
+   Observed stochastic nodes: 553
+   Unobserved stochastic nodes: 3
+   Total graph size: 1500
+
+Compiling model graph
+   Resolving undeclared variables
+   Allocating nodes
+Graph information:
+   Observed stochastic nodes: 553
+   Unobserved stochastic nodes: 3
+   Total graph size: 1482
+
+Initializing model
+
+Initializing model
+
+  |============================                           |  50%, ETA 00:02  |===================================================| 100%, Elapsed 00:02
+  |                                                  | 0 % ~calculating    |+++++++++++++++++++++++++                         | 50% ~00s            |++++++++++++++++++++++++++++++++++++++++++++++++++| 100% elapsed=00s  
+  |                                                  | 0 % ~calculating    |+++++++++++++++++++++++++                         | 50% ~00s            |++++++++++++++++++++++++++++++++++++++++++++++++++| 100% elapsed=00s  
+  |                                                          |   0%, ETA NA  |===================================================| 100%, Elapsed 00:00
+  |                                                  | 0 % ~calculating    |+++++++++++++++++++++++++                         | 50% ~00s            |++++++++++++++++++++++++++++++++++++++++++++++++++| 100% elapsed=00s  
+  |                                                          |   0%, ETA NACompiling model graph
+   Resolving undeclared variables
+   Allocating nodes
+Graph information:
+   Observed stochastic nodes: 40
+   Unobserved stochastic nodes: 43
+   Total graph size: 195
+
+Compiling model graph
+   Resolving undeclared variables
+   Allocating nodes
+Graph information:
+   Observed stochastic nodes: 40
+   Unobserved stochastic nodes: 43
+   Total graph size: 197
+
+Initializing model
+
+Initializing model
+
+Compiling model graph
+   Resolving undeclared variables
+   Allocating nodes
+Graph information:
+   Observed stochastic nodes: 20
+   Unobserved stochastic nodes: 3
+   Total graph size: 74
+
+Compiling model graph
+   Resolving undeclared variables
+   Allocating nodes
+Graph information:
+   Observed stochastic nodes: 20
+   Unobserved stochastic nodes: 3
+   Total graph size: 72
+
+Initializing model
+
+Initializing model
+
+  |===================================================| 100%, Elapsed 00:00
+  |                                                  | 0 % ~calculating    |+++++++++++++++++++++++++                         | 50% ~00s            |++++++++++++++++++++++++++++++++++++++++++++++++++| 100% elapsed=00s  
+  |                                                  | 0 % ~calculating    |+++++++++++++++++++++++++                         | 50% ~00s            |++++++++++++++++++++++++++++++++++++++++++++++++++| 100% elapsed=00s  
+  |                                                          |   0%, ETA NA  |============================                           |  50%, ETA 00:00  |===================================================| 100%, Elapsed 00:00
+  |                                                  | 0 % ~calculating    |+++++++++++++++++++++++++                         | 50% ~00s            |++++++++++++++++++++++++++++++++++++++++++++++++++| 100% elapsed=00s  
+  |                                                          |   0%, ETA NACompiling model graph
+   Resolving undeclared variables
+   Allocating nodes
+Graph information:
+   Observed stochastic nodes: 28
+   Unobserved stochastic nodes: 31
+   Total graph size: 146
+
+Compiling model graph
+   Resolving undeclared variables
+   Allocating nodes
+Graph information:
+   Observed stochastic nodes: 28
+   Unobserved stochastic nodes: 31
+   Total graph size: 144
+
+Initializing model
+
+Initializing model
+
+Compiling model graph
+   Resolving undeclared variables
+   Allocating nodes
+Graph information:
+   Observed stochastic nodes: 14
+   Unobserved stochastic nodes: 3
+   Total graph size: 54
+
+Compiling model graph
+   Resolving undeclared variables
+   Allocating nodes
+Graph information:
+   Observed stochastic nodes: 14
+   Unobserved stochastic nodes: 3
+   Total graph size: 58
+
+Initializing model
+
+Initializing model
+
+  |============================                           |  50%, ETA 00:00  |===================================================| 100%, Elapsed 00:00
