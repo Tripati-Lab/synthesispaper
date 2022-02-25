@@ -1,8 +1,0 @@
-"","targetMaterialColumn","dataset","model","median","lwr","upr"
-"1","MarineMetazoa","MarineMetazoa","BLM1_fit",-6407.18074635111,-6560.50227274371,-6267.11372961053
-"2","MarineMetazoa","MarineMetazoa","BLM1_fit_NoErrors",-4043.63063447846,-4139.60150715183,-3948.30683766575
-"3","MarineMetazoa","MarineMetazoa","BLM3_fit",-6408.49778594644,-6576.44841593741,-6265.35942472236
-"4","MarineMetazoa","2","BLM1_fit",-5564.26705111674,-5728.7513498418,-5404.59214250593
-"5","MarineMetazoa","2","BLM1_fit_NoErrors",-3578.20566286054,-3688.14206860257,-3458.07175186943
-"6","MarineMetazoa","1","BLM1_fit",-929.42081370645,-978.843503171041,-875.762270828312
-"7","MarineMetazoa","1","BLM1_fit_NoErrors",-602.845174862476,-632.98364468607,-572.976792486888

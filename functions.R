@@ -1,26 +1,9 @@
 ##Functions are sourced from BayClump
 
-#source(
-#  "https://raw.githubusercontent.com/Tripati-Lab/BayClump/main/Functions/fitClumpedRegressions.R"
-#)
 source(
-  "https://raw.githubusercontent.com/Tripati-Lab/BayClump/dev/Functions/fitClumpedRegressions.R"
+  "https://raw.githubusercontent.com/Tripati-Lab/BayClump/dev/Functions/Calibration_BayesianNonBayesian.R"
 )
-source(
-  "https://raw.githubusercontent.com/Tripati-Lab/BayClump/main/Functions/clumPipe.R"
-)
-source(
-  "https://raw.githubusercontent.com/Tripati-Lab/BayClump/main/Functions/getR2Bayesian.R"
-)
-source(
-  "https://raw.githubusercontent.com/Tripati-Lab/BayClump/dev/Functions/functionsSimulationsMixed.R"
-)
-source(
-  "https://raw.githubusercontent.com/Tripati-Lab/BayClump/main/Functions/functionsRegressionCI.R"
-)
-source(
-  "https://raw.githubusercontent.com/Tripati-Lab/BayClump/main/Functions/functionsRegressionCI.R"
-)
+
 
 ##Basic functions
 
@@ -29,13 +12,14 @@ fitsingleDataset <- function(data,
                              generations = 1000,
                              isMixed=T) {
   ##Models
-  a <- simulateYork_measured(data = data, replicates = replicates)
-  b <- simulateLM_measured(data = data, replicates = replicates)
-  c <- simulateDeming(data = data, replicates = replicates)
-  d <- simulateLM_inverseweights(data = data, replicates = replicates)
+  a <- simulateYork_measured(data = data, replicates = replicates, samples=NULL)
+  b <- simulateLM_measured(data = data, replicates = replicates, samples=NULL)
+  c <- simulateDeming(data = data, replicates = replicates, samples=NULL)
+  d <- simulateLM_inverseweights(data = data, replicates = replicates, samples=NULL)
   e <-
     simulateBLM_measuredMaterial(
       data = data,
+      samples=NULL,
       replicates = replicates,
       generations = generations,
       isMixed = isMixed
