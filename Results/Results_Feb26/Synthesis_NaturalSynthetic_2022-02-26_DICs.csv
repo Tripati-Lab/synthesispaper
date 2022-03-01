@@ -1,0 +1,10 @@
+"","targetMaterialColumn","dataset","model","median","lwr","upr"
+"1","NaturalSynthetic","NaturalSynthetic","BLM1_fit",-5208.77125184235,-5345.11885200755,-5085.47974326046
+"2","NaturalSynthetic","NaturalSynthetic","BLM1_fit_NoErrors",-2549.23215420112,-3080.9467768712,-1730.71212052903
+"3","NaturalSynthetic","NaturalSynthetic","BLM3_fit",-5226.26242837273,-5355.05956918271,-5089.16166739599
+"4","NaturalSynthetic","3","BLM1_fit",-1559.43530161712,-1640.40952860021,-1487.2905787924
+"5","NaturalSynthetic","3","BLM1_fit_NoErrors",-685.205176518375,-769.675657020863,-589.974379708419
+"6","NaturalSynthetic","2","BLM1_fit",-3497.882889339,-3600.31140054806,-3398.23174674311
+"7","NaturalSynthetic","2","BLM1_fit_NoErrors",-1777.0965740971,-2233.55561913197,-1252.10889192934
+"8","NaturalSynthetic","1","BLM1_fit",-244.68100648832,-262.207796887987,-224.262636340175
+"9","NaturalSynthetic","1","BLM1_fit_NoErrors",-145.324455550832,-153.512934741656,-137.428073155428
