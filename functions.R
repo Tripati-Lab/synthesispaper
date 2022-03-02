@@ -309,7 +309,7 @@ fitsinglePartitioned <-
       list(
         ParameterSummary = sumPart,
         R2s = R2s,
-        wAIC = DICs,
+        DIC = DICs,
         #keys = keyn,
         keys = keys,
         Conv = Conv
