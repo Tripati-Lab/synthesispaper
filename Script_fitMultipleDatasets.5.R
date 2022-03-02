@@ -8,6 +8,7 @@ library(data.table)
 library(tictoc)
 library(rlist)
 library(dplyr)
+library(loo)
 source("functions.R")
 
 tic()

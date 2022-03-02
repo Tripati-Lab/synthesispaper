@@ -1,0 +1,7 @@
+"","OriginalCode","Mineralogy","Freq","original","targetMaterialColumn","NumericCode","N"
+"1","1","Aragonite",6,1,"Material2",1,8
+"2","1","Calcite",2,1,"Material2",1,8
+"3","1","Dolomite",0,1,"Material2",1,8
+"4","2","Aragonite",0,2,"Material2",2,2
+"5","2","Calcite",0,2,"Material2",2,2
+"6","2","Dolomite",2,2,"Material2",2,2
