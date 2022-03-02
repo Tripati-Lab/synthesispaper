@@ -207,20 +207,24 @@ fitsinglePartitioned <-
     })
     
     
+    
+    
     #Keys
      keys <- lapply(sumPart, function(x)
        attr(x, 'key'))
      names(keys) <- targetColumns
      keys <- rbindlist(keys, idcol = T)
-     samples <- as.data.frame(table(keys$original))
-     colnames(samples)[1] <- 'original'
+     samples <- as.data.frame(table(calData[, targetColumns]))
+     colnames(samples)[1] <- 'OriginalCode'
     # 
-     samples$original <- as.numeric(samples$original)
+     samples$original <- as.numeric(samples$OriginalCode)
      keys<-as.data.frame(keys)
      keys<- aggregate(numeric(nrow(keys)), keys[c(".id", "original","number")], length) 
      colnames(keys) <- c( "targetMaterialColumn",'OriginalCode',"NumericCode",'N')
      keys <- keys[order(keys$targetMaterialColumn),] 
     
+     keys <- merge(samples, keys, by='OriginalCode')
+     
     #keyn <- setDT(key)[,list(Count=.N) ,names(key)]
     #key<-as.data.frame(keys)
     #keyn <- aggregate(numeric(nrow(key)), key[c("original","number")], length) 

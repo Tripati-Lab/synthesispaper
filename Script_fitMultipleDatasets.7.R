@@ -46,15 +46,15 @@ testResults <- fitsinglePartitioned(
 #synData <- read.csv('RawData/Current List_Nov22_2021.csv')
 #synData <- read.csv('RawData/Current List_Nov24_2021.csv')
 #synData <- read.csv('RawData/Current List_Dec1_2021.csv')
-synData <- read.csv('RawData/Current List_Feb4_2022.csv')
+#synData <- read.csv('RawData/Current List_Feb4_2022.csv')
+synData <- read.csv('RawData/Current List_Mar1_2022.csv')
+
 
 synData$TempError <- ifelse(synData$TempError ==0, 1E-5, synData$TempError)
 synData$D47error <- ifelse(synData$D47error ==0, 1E-5, synData$D47error)
-synData<-synData %>% group_by(Mineralogy, Lab, Forams,MarineMetazoa, Teeth, NaturalSynthetic, 
-                              Mollusk,Lake) %>% filter(n()>=10) %>% as.data.frame() 
-
-#targetColumns <- colnames(synData)[c(11:19)]
 targetColumns <- colnames(synData)[c(17)]
+targetLevels<- names(which(table(synData[,targetColumns])>10))
+synData <- synData[synData[,targetColumns] %in% targetLevels ,]
 
 SynthesisResults <- fitsinglePartitioned(
   calData = synData,
