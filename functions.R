@@ -8,63 +8,24 @@ source(
 ##Basic functions
 
 fitsingleDataset <- function(data,
-                             replicates = 2,
-                             generations = 1000,
-                             isMixed=T) {
+                             replicates = 2) {
   ##Models
   a <- simulateYork_measured(data = data, replicates = replicates, samples=NULL)
   b <- simulateLM_measured(data = data, replicates = replicates, samples=NULL)
   c <- simulateDeming(data = data, replicates = replicates, samples=NULL)
   d <- simulateLM_inverseweights(data = data, replicates = replicates, samples=NULL)
-  e <-
-    simulateBLM_measuredMaterial(
-      data = data,
-      samples=NULL,
-      replicates = replicates,
-      generations = generations,
-      isMixed = isMixed
-    )
-  
-  if( isMixed ) {
-    
+
     SumTable <- rbind.data.frame(
-      cbind(model = 'York', a, material = NA),
-      cbind(model = 'LM', b, material = NA),
-      cbind(model = 'Deming', c, material = NA),
-      cbind(model = 'Weighted', d, material = NA),
+      cbind.data.frame(model = 'York', a),
+      cbind.data.frame(model = 'LM', b),
+      cbind.data.frame(model = 'Deming', c),
+      cbind.data.frame(model = 'Weighted', d),
       make.row.names = F
     )
     
-    SumTable <- rbind(SumTable,
-                      cbind(model = 'Bayesian mixed', e$BLMM_Measured_errors)
-    )
-  }else{
-    
-    SumTable <- rbind.data.frame(
-      cbind(model = 'York', a, material = NA),
-      cbind(model = 'LM', b, material = NA),
-      cbind(model = 'Deming', c, material = NA),
-      cbind(model = 'Weighted', d, material = NA),
-      cbind(
-        model = 'Bayesian errors',
-        e$BLM_Measured_errors,
-        material = NA
-      ),
-      cbind(
-        model = 'Bayesian no errors',
-        e$BLM_Measured_no_errors,
-        material = NA
-      ),
-      make.row.names = F
-    )
-    
-  }
-  
-  attr(SumTable, "DICs") <- attr(e, "DICs")
-  attr(SumTable, "R2s") <- attr(e, "R2s")
-  attr(SumTable, "Conv") <- attr(e, "Conv")
   return(SumTable)
 }
+
 fitsinglePartitioned <-
   function(calData,
            targetColumns,
@@ -86,231 +47,174 @@ fitsinglePartitioned <-
         calDataSelected[calDataSelected$Material %in% names(table(calDataSelected$Material) >
                                                               2), ]
       #Full dataset
-      dt1 <-
+      full <- list("NonBayesian"=
         fitsingleDataset(data = calDataSelected,
-                         replicates = replicates,
-                         generations = generations, isMixed = F)
+                         replicates = replicates),
       
-      dt <-
-        fitsingleDataset(data = calDataSelected,
-                         replicates = replicates,
-                         generations = generations, isMixed = T)
+        "Bayesian"= fitClumpedRegressions(calibrationData=calDataSelected, 
+                                 n.iter = generations, 
+                                 burninFrac = 0.5,
+                                 priors = "Informative",
+                                 D47error = "D47error")
+      )
       
-      
+
       #Partitioned by level
       subSampled <-
         lapply(unique(calDataSelected$Material), function(y) {
           calDataSelectedgroup <-
             calDataSelected[calDataSelected$Material == y, ]
-          keep = T
-          i = 0
-          k = 0
-          while (keep) {
-            keep = if (i == 0) {
-              if (k > maxtry) {
-                F
-              } else{
-                T
-              }
-            } else{
-              F
-            }
-            k = k + 1
-            tryCatch({
-              resDS <-
-                invisible(
-                  fitsingleDataset(
-                    calDataSelectedgroup,
-                    replicates = replicates,
-                    generations = generations,
-                    isMixed = F
-                  )
-                )
-              i = 1
-              return(resDS)
-            }, error = function(e) {
-            })
-          }
+          calDataSelectedgroup$Material <- 1
+          resDS <-
+            invisible(
+              list("NonBayesian"= fitsingleDataset(
+                calDataSelectedgroup
+              ),
+              "Bayesian"=fitClumpedRegressions(calibrationData=calDataSelectedgroup, 
+                                               n.iter = generations, 
+                                               burninFrac = 0.5,
+                                               priors = "Informative",
+                                               D47error = "D47error")
+              )
+            )
+          
+          
         })
       
       names(subSampled) <- unique(calDataSelected$Material)
       
-      dtT <- cbind(.id = 'Full', dt)
-      dtT <- dtT[dtT$model == "Bayesian mixed",]
+      ##Extract DICs
+      DICs <- rbind.data.frame(
+      cbind.data.frame("Material"="Full", data.frame(t(attr(full$Bayesian,"DICs")))),
+      rbindlist(lapply(subSampled, function(x){
+       data.frame(t(data.frame(attr(x$Bayesian,"DICs"))))
+      } ), idcol = "Material")
+      )
 
-      fullDS <- rbind(cbind(.id = 'Full', dt1) ,dtT,
-                      rbindlist(subSampled, idcol = T))
+      ##Extract parameters (non-Bayesian)
       
-      R2s <- lapply(subSampled, function(x)
-        attr(x, 'R2s'))
+      paramNonBayesian <- rbindlist(list(
+      'Full'=full$NonBayesian %>% group_by(model)%>%
+        summarise(meanBeta= mean(beta), sdBeta= sd(beta),
+                  meanAlpha= mean(alpha), sdAlpha= sd(alpha), Material=NA),
       
-      r2M<-attr(dt, "R2s")
-      r2M <- r2M[r2M$Group.2 == 'BLM3_fit',]
-      r2nM <- attr(dt1, "R2s")
-      r2nM$Group.2 <- NA
-      r2B <-rbind(r2M,r2nM)
+      'subsets'=rbindlist(lapply(subSampled, function(x){
+        if(!is.null(x) ){
+       x$NonBayesian %>% group_by(model)%>%
+          summarise(meanBeta= mean(beta), sdBeta= sd(beta),
+                    meanAlpha= mean(alpha), sdAlpha= sd(alpha))
+        }
+      }), idcol = 'Material')
+      ), fill = T, idcol = 'Dataset')
       
-      R2s <- list(r2B, R2s)
+      ##Extract parameters (Bayesian)
       
-      DICs <- lapply(subSampled, function(x)
-        attr(x, 'DICs'))
+      extractParamsBayesian <-  function(listBayesian, name, nameMaterial){
       
-      DICm<-attr(dt, "DICs")[3,]
-      DICnm<-attr(dt1, "DICs")
+      nr<-nrow(listBayesian$Bayesian$BLM3_fit$BUGSoutput$summary)
+      tdata <- listBayesian$Bayesian$BLM1_fit$BUGSoutput$summary[c(1:2),c(1:2)]
+      a <- cbind.data.frame("Dataset"=name, 
+                       "model"='BLM1_fit',
+                       "meanBeta"=tdata[2,1],
+                       "sdBeta"=tdata[2,2],
+                       "meanAlpha"=tdata[1,1], 
+                       "sdAlpha"=tdata[1,2], "Material"=ifelse(name!='subsets', NA, nameMaterial)
+      )
       
-      DICsB <- rbind(DICnm,DICm)
-      DICs <- list(DICsB, DICs)
+      tdata <- listBayesian$Bayesian$BLM1_fit_NoErrors$BUGSoutput$summary[c(1:2),c(1:2)]
+      b <- cbind.data.frame("Dataset"=name, 
+                       "model"='BLM1_fit_NoErrors',
+                       "meanBeta"=tdata[2,1],
+                       "sdBeta"=tdata[2,2],
+                       "meanAlpha"=tdata[1,1], 
+                       "sdAlpha"=tdata[1,2], "Material"=ifelse(name!='subsets', NA, nameMaterial)
+      )
       
-      ##Now combine convergence
-      ###For part
-      Conv <- lapply(subSampled, function(x)
-        attr(x, 'Conv') )
-      names(Conv) <- names(subSampled)
-      Conv <- Filter(Negate(is.null), Conv)
+      tdata <- listBayesian$Bayesian$BLM3_fit$BUGSoutput$summary[-c((nr-3):nr),c(1:2)]
       
-      rawConv <- lapply(seq_along(Conv),  function(y){
-        x<-list.flatten(Conv[[y]])
-        test<-lapply(seq_along(x), function(z){
-          par<- as.data.frame(x[[z]])
-          cbind.data.frame(parameter=row.names(par),par)
-        })
-        names(test) <-names(x)
-        rbindlist(test, fill=T, idcol='Model', use.names=T)
+      
+      c<- if(nrow(tdata) ==2 ){
         
-      })
+        cbind.data.frame("Dataset"=name, 
+                         "model"='BLM3',
+                         "meanBeta"=tdata[2,1],
+                         "sdBeta"=tdata[2,2],
+                         "meanAlpha"=tdata[1,1], 
+                         "sdAlpha"=tdata[1,2], "Material"=ifelse(name!='subsets', NA, nameMaterial)
+        )
+        
+      }else{
       
-      names(rawConv) <- names(Conv)
-      
-      
-      ###For the full
-      
-      fl<-lapply(list.flatten(attr(dt, "Conv")), function(z){
-        par<- as.data.frame(z)
-        cbind.data.frame(parameter=row.names(par),par)
-      })
-      fl1<-lapply(list.flatten(attr(dt1, "Conv")), function(z){
-        par<- as.data.frame(z)
-        cbind.data.frame(parameter=row.names(par),par)
-      })
-      
-      fl <- fl[names(fl) == "BLM3_fit"]
-      flc<-c(fl1,fl)
-      
-      flC<-rbindlist(flc, fill=T, idcol='Model', use.names=T)
-
-      attr(fullDS, 'key') <- key
-      attr(fullDS, 'R2s') <- R2s
-      attr(fullDS, 'DICs') <- DICs
-      attr(fullDS, 'Conv') <- list(flC,rawConv)
-      
-      return(fullDS)
-    })
-    
-    
-    
-    
-    #Keys
-     keys <- lapply(sumPart, function(x)
-       attr(x, 'key'))
-     names(keys) <- targetColumns
-     keys <- rbindlist(keys, idcol = T)
-     samples <- as.data.frame(table(calData[, targetColumns]))
-     colnames(samples)[1] <- 'OriginalCode'
-    # 
-     samples$original <- as.numeric(samples$OriginalCode)
-     keys<-as.data.frame(keys)
-     keys<- aggregate(numeric(nrow(keys)), keys[c(".id", "original","number")], length) 
-     colnames(keys) <- c( "targetMaterialColumn",'OriginalCode',"NumericCode",'N')
-     keys <- keys[order(keys$targetMaterialColumn),] 
-    
-     keys <- merge(samples, keys, by='OriginalCode')
+      do.call(rbind, lapply(1:(nrow(tdata)/2), function(x){
+      cbind.data.frame("Dataset"=name, 
+                       "model"='BLM3',
+                       "meanBeta"=tdata[(x+2),1],
+                       "sdBeta"=tdata[(x+2),2],
+                       "meanAlpha"=tdata[(x),1], 
+                       "sdAlpha"=tdata[x,2], 
+                       "Material"=ifelse(name!='subsets', gsub("[^0-9]", "", row.names(tdata)[x]), nameMaterial) 
+      )
+      }))
+      }
      
-    #keyn <- setDT(key)[,list(Count=.N) ,names(key)]
-    #key<-as.data.frame(keys)
-    #keyn <- aggregate(numeric(nrow(key)), key[c("original","number")], length) 
-    
-    
-    #R2s
-    R2s <- lapply(sumPart, function(x)
-      attr(x, 'R2s'))
-    names(R2s) <- targetColumns
-    R2SG <- sapply(1:length(targetColumns), function(y) {
-      R2s <- lapply(R2s[[y]][-1], function(x)
-        rbindlist(x, idcol = T))
+     rbind.data.frame(a,b,c)
+     
+      }
+     
+      paramBayesian <- rbind(
+      extractParamsBayesian(full, "Full"),
+      do.call(rbind,lapply(seq_along(subSampled), function(x){
+        if(!is.null(subSampled[[x]])){
+        extractParamsBayesian(listBayesian=subSampled[[x]], name='subsets', names(subSampled)[x])
+        }
+      }))
+      )
+      
+      params <- rbind(paramBayesian,paramNonBayesian)
+      params <- params[with(params, order(params$Dataset, params$model, params$Material)), ]
+      colnames(params)
+      params <- params[,c(1,2,7,3:6)]
+      
+      ##Convergence
+      
+      Convergence = rbindlist(list(
+        "Full"=
+      rbindlist(lapply(full$Bayesian, function(x){
+        as.data.frame(x$BUGSoutput$summary)
+      }), idcol = "Model"),
+      "Subsets"=
+      rbindlist( lapply(subSampled, function(y){
+        rbindlist(lapply(y$Bayesian, function(x){
+          as.data.frame(x$BUGSoutput$summary)
+        }), idcol = "Model")
+      }), idcol = 'Material')
+      ), fill=T, idcol = "Dataset")
+      
+      key <- as.data.frame(table(key))
+      key <- key[key$Freq != 0,]
+      
+      toRet <- list(
+        'params'=params,
+        'DICs'=DICs,
+        'Convergence'=Convergence,
+        'key'=key
+      )
+      
+      return(toRet)
     })
-    R2full <- lapply(1:length(targetColumns), function(y) {
-      R2s[[y]][[1]]
-    })
-    names(R2SG) <- targetColumns
-    names(R2full) <- targetColumns
-    
-    R2SG <- rbindlist(R2SG, idcol = T)
-    colnames(R2SG)[1] <- "targetMaterialColumn"
-    R2full <- rbindlist(R2full, idcol = T)
-    R2full$targetMaterialColumn <- R2full$.id
-    
-    R2s <- rbindlist(list(R2full, R2SG), fill = T)
-    R2s <- R2s[, c(7, 1:6)]
-    colnames(R2s)[c(2, 3, 4)] <- c("dataset", "R2 type", "model")
-    
-    
-    #DICs
-    DICs <- lapply(sumPart, function(x)
-      attr(x, 'DICs'))
-    names(DICs) <- targetColumns
-    DICsG <- sapply(1:length(targetColumns), function(y) {
-      DICs <- lapply(DICs[[y]][-1], function(x)
-        rbindlist(x, idcol = T))
-    })
-    DICsfull <- lapply(1:length(targetColumns), function(y) {
-      DICs[[y]][[1]]
-    })
-    names(DICsG) <- targetColumns
-    names(DICsfull) <- targetColumns
-    
-    DICsG <- rbindlist(DICsG, idcol = T)
-    colnames(DICsG)[1] <- "targetMaterialColumn"
-    DICsfull <- rbindlist(DICsfull, idcol = T)
-    DICsfull$targetMaterialColumn <- DICsfull$.id
-    DICs <- rbind(DICsfull, DICsG)
-    DICs <- DICs[, c(6, 1, 5, 2:4)]
-    colnames(DICs)[c(2)] <- c("dataset")
-    
-    #Convergence (assuming one column at a time is processed)
     names(sumPart) <- targetColumns
-    Conv <- lapply(sumPart, function(x)
-      attr(x, 'Conv')  )
     
-    comp<- list()
-    comp[[1]] <- cbind.data.frame(dataset='Full', Conv[[1]][[1]])
-    for( i in seq_along(Conv[[1]][[2]])){
-      comp[[i+1]] <- cbind.data.frame(dataset= names(Conv[[1]][[2]])[i] , Conv[[1]][[2]][[i]])
-    }
-    
-    Conv <- rbindlist(comp)
 
+    sumPars <- rbindlist(lapply(sumPart, function(x) x$params), idcol = 'targetColumns')
+    DICs <- rbindlist(lapply(sumPart, function(x) x$DICs), idcol = 'targetColumns')
+    Conv <- rbindlist(lapply(sumPart, function(x) x$Convergence), idcol = 'targetColumns')
+    keys<-rbindlist(lapply(sumPart, function(x) x$key), idcol = 'targetColumns')
     
-    #Parameters
-    names(sumPart) <- targetColumns
-    sumPart <- rbindlist(sumPart,  idcol = T)
-    colnames(sumPart)[c(1, 2, 6)] <-
-      c('targetMaterialColumn', 'dataset', 'BLMM_material')
-    sumPart <- sumPart[, c(1, 2, 6, 3:5)]
-    
-    
-    
-    sumPart <- sumPart[!grepl("[A-Za-z]", sumPart$intercept, perl = T), ]
-    sumPart <- sumPart[!grepl("[A-Za-z]", sumPart$intercept, perl = T), ]
-    
-    sumPart$intercept <- as.numeric(as.character(sumPart$intercept))
-    sumPart$slope <- as.numeric(as.character(sumPart$slope))
-    
+
     condensed <-
       list(
-        ParameterSummary = sumPart,
-        R2s = R2s,
-        wAIC = DICs,
-        #keys = keyn,
+        ParameterSummary = sumPars,
+        DICs = DICs,
         keys = keys,
         Conv = Conv
       )

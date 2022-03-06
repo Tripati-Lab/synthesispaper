@@ -15,24 +15,6 @@ tic()
 dumpfile <- file("script2messages.txt", open = "wt")
 sink(dumpfile, type = "output")
 
-#Using sample data from the app
-calData <-
-  read.csv(
-    "https://raw.githubusercontent.com/Tripati-Lab/BayClump/main/BayClump_calibration_template.csv"
-  )
-calData$Material2 <- calData$Material
-calData$Material <- NULL
-targetColumns <- c("Material2", "Mineralogy")
-
-testResults <- fitsinglePartitioned(
-  calData = calData,
-  targetColumns = targetColumns,
-  replicates = 2,
-  generations = 1000,
-  maxtry = 10,
-  export = T,
-  prefix = paste0("Test_", Sys.Date())
-)
 
 #Real analyses
 # Using the version on gdrive?
