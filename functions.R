@@ -110,57 +110,57 @@ fitsinglePartitioned <-
       ##Extract parameters (Bayesian)
       
       extractParamsBayesian <-  function(listBayesian, name, nameMaterial){
-      
-      nr<-nrow(listBayesian$Bayesian$BLM3_fit$BUGSoutput$summary)
-      tdata <- listBayesian$Bayesian$BLM1_fit$BUGSoutput$summary[c(1:2),c(1:2)]
-      a <- cbind.data.frame("Dataset"=name, 
-                       "model"='BLM1_fit',
-                       "meanBeta"=tdata[2,1],
-                       "sdBeta"=tdata[2,2],
-                       "meanAlpha"=tdata[1,1], 
-                       "sdAlpha"=tdata[1,2], "Material"=ifelse(name!='subsets', NA, nameMaterial)
-      )
-      
-      tdata <- listBayesian$Bayesian$BLM1_fit_NoErrors$BUGSoutput$summary[c(1:2),c(1:2)]
-      b <- cbind.data.frame("Dataset"=name, 
-                       "model"='BLM1_fit_NoErrors',
-                       "meanBeta"=tdata[2,1],
-                       "sdBeta"=tdata[2,2],
-                       "meanAlpha"=tdata[1,1], 
-                       "sdAlpha"=tdata[1,2], "Material"=ifelse(name!='subsets', NA, nameMaterial)
-      )
-      
-      tdata <- listBayesian$Bayesian$BLM3_fit$BUGSoutput$summary[-c((nr-3):nr),c(1:2)]
-      
-      
-      c<- if(nrow(tdata) ==2 ){
         
-        cbind.data.frame("Dataset"=name, 
-                         "model"='BLM3',
-                         "meanBeta"=tdata[2,1],
-                         "sdBeta"=tdata[2,2],
-                         "meanAlpha"=tdata[1,1], 
-                         "sdAlpha"=tdata[1,2], "Material"=ifelse(name!='subsets', NA, nameMaterial)
+        nr<-nrow(listBayesian$Bayesian$BLM3_fit$BUGSoutput$summary)
+        tdata <- listBayesian$Bayesian$BLM1_fit$BUGSoutput$summary[c(1:2),c(1:2)]
+        a <- cbind.data.frame("Dataset"=name, 
+                              "model"='BLM1_fit',
+                              "meanBeta"=tdata[2,1],
+                              "sdBeta"=tdata[2,2],
+                              "meanAlpha"=tdata[1,1], 
+                              "sdAlpha"=tdata[1,2], "Material"=ifelse(name!='subsets', NA, nameMaterial)
         )
         
-      }else{
+        tdata <- listBayesian$Bayesian$BLM1_fit_NoErrors$BUGSoutput$summary[c(1:2),c(1:2)]
+        b <- cbind.data.frame("Dataset"=name, 
+                              "model"='BLM1_fit_NoErrors',
+                              "meanBeta"=tdata[2,1],
+                              "sdBeta"=tdata[2,2],
+                              "meanAlpha"=tdata[1,1], 
+                              "sdAlpha"=tdata[1,2], "Material"=ifelse(name!='subsets', NA, nameMaterial)
+        )
+        
+        tdata <- listBayesian$Bayesian$BLM3_fit$BUGSoutput$summary[-c((nr-3):nr),c(1:2)]
+        nmat <- nrow(tdata)/2
+        
+        c<- if(nrow(tdata) ==2 ){
+          
+          cbind.data.frame("Dataset"=name, 
+                           "model"='BLM3',
+                           "meanBeta"=tdata[2,1],
+                           "sdBeta"=tdata[2,2],
+                           "meanAlpha"=tdata[1,1], 
+                           "sdAlpha"=tdata[1,2], "Material"=ifelse(name!='subsets', NA, nameMaterial)
+          )
+          
+        }else{
+          
+          do.call(rbind, lapply(1:(nrow(tdata)/2), function(x){
+            cbind.data.frame("Dataset"=name, 
+                             "model"='BLM3',
+                             "meanBeta"=tdata[(x+nmat),1],
+                             "sdBeta"=tdata[(x+nmat),2],
+                             "meanAlpha"=tdata[(x),1], 
+                             "sdAlpha"=tdata[x,2], 
+                             "Material"=ifelse(name!='subsets', gsub("[^0-9]", "", row.names(tdata)[x]), nameMaterial) 
+            )
+          }))
+        }
+        
+        rbind.data.frame(a,b,c)
+        
+      }
       
-      do.call(rbind, lapply(1:(nrow(tdata)/2), function(x){
-      cbind.data.frame("Dataset"=name, 
-                       "model"='BLM3',
-                       "meanBeta"=tdata[(x+2),1],
-                       "sdBeta"=tdata[(x+2),2],
-                       "meanAlpha"=tdata[(x),1], 
-                       "sdAlpha"=tdata[x,2], 
-                       "Material"=ifelse(name!='subsets', gsub("[^0-9]", "", row.names(tdata)[x]), nameMaterial) 
-      )
-      }))
-      }
-     
-     rbind.data.frame(a,b,c)
-     
-      }
-     
       paramBayesian <- rbind(
       extractParamsBayesian(full, "Full"),
       do.call(rbind,lapply(seq_along(subSampled), function(x){
@@ -172,7 +172,6 @@ fitsinglePartitioned <-
       
       params <- rbind(paramBayesian,paramNonBayesian)
       params <- params[with(params, order(params$Dataset, params$model, params$Material)), ]
-      colnames(params)
       params <- params[,c(1,2,7,3:6)]
       
       ##Convergence
