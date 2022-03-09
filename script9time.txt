@@ -1,1 +1,1 @@
-1073.79 sec elapsed
+1604.923 sec elapsed

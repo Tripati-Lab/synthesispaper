@@ -4,7 +4,7 @@ Compiling model graph
 Graph information:
    Observed stochastic nodes: 1652
    Unobserved stochastic nodes: 2489
-   Total graph size: 11206
+   Total graph size: 11205
 
 Initializing model
 
@@ -16,7 +16,7 @@ Compiling model graph
 Graph information:
    Observed stochastic nodes: 1652
    Unobserved stochastic nodes: 1655
-   Total graph size: 8700
+   Total graph size: 8698
 
 Initializing model
 
@@ -28,7 +28,7 @@ Compiling model graph
 Graph information:
    Observed stochastic nodes: 826
    Unobserved stochastic nodes: 3
-   Total graph size: 3854
+   Total graph size: 3855
 
 Initializing model
 
@@ -43,7 +43,7 @@ Compiling model graph
 Graph information:
    Observed stochastic nodes: 82
    Unobserved stochastic nodes: 126
-   Total graph size: 622
+   Total graph size: 621
 
 Initializing model
 
@@ -55,7 +55,7 @@ Compiling model graph
 Graph information:
    Observed stochastic nodes: 82
    Unobserved stochastic nodes: 85
-   Total graph size: 479
+   Total graph size: 477
 
 Initializing model
 
@@ -67,7 +67,7 @@ Compiling model graph
 Graph information:
    Observed stochastic nodes: 41
    Unobserved stochastic nodes: 3
-   Total graph size: 220
+   Total graph size: 221
 
 Initializing model
 
@@ -82,7 +82,7 @@ Compiling model graph
 Graph information:
    Observed stochastic nodes: 264
    Unobserved stochastic nodes: 399
-   Total graph size: 1904
+   Total graph size: 1903
 
 Initializing model
 
@@ -94,7 +94,7 @@ Compiling model graph
 Graph information:
    Observed stochastic nodes: 264
    Unobserved stochastic nodes: 267
-   Total graph size: 1488
+   Total graph size: 1486
 
 Initializing model
 
@@ -106,7 +106,7 @@ Compiling model graph
 Graph information:
    Observed stochastic nodes: 132
    Unobserved stochastic nodes: 3
-   Total graph size: 688
+   Total graph size: 689
 
 Initializing model
 
@@ -121,7 +121,7 @@ Compiling model graph
 Graph information:
    Observed stochastic nodes: 1204
    Unobserved stochastic nodes: 1809
-   Total graph size: 8153
+   Total graph size: 8152
 
 Initializing model
 
@@ -133,7 +133,7 @@ Compiling model graph
 Graph information:
    Observed stochastic nodes: 1204
    Unobserved stochastic nodes: 1207
-   Total graph size: 6327
+   Total graph size: 6325
 
 Initializing model
 
@@ -145,7 +145,7 @@ Compiling model graph
 Graph information:
    Observed stochastic nodes: 602
    Unobserved stochastic nodes: 3
-   Total graph size: 2884
+   Total graph size: 2885
 
 Initializing model
 
@@ -160,7 +160,7 @@ Compiling model graph
 Graph information:
    Observed stochastic nodes: 46
    Unobserved stochastic nodes: 72
-   Total graph size: 364
+   Total graph size: 363
 
 Initializing model
 
@@ -172,7 +172,7 @@ Compiling model graph
 Graph information:
    Observed stochastic nodes: 46
    Unobserved stochastic nodes: 49
-   Total graph size: 275
+   Total graph size: 273
 
 Initializing model
 
@@ -184,7 +184,7 @@ Compiling model graph
 Graph information:
    Observed stochastic nodes: 23
    Unobserved stochastic nodes: 3
-   Total graph size: 136
+   Total graph size: 137
 
 Initializing model
 
@@ -199,7 +199,7 @@ Compiling model graph
 Graph information:
    Observed stochastic nodes: 56
    Unobserved stochastic nodes: 87
-   Total graph size: 438
+   Total graph size: 437
 
 Initializing model
 
@@ -211,7 +211,7 @@ Compiling model graph
 Graph information:
    Observed stochastic nodes: 56
    Unobserved stochastic nodes: 59
-   Total graph size: 334
+   Total graph size: 332
 
 Initializing model
 
@@ -223,7 +223,7 @@ Compiling model graph
 Graph information:
    Observed stochastic nodes: 28
    Unobserved stochastic nodes: 3
-   Total graph size: 154
+   Total graph size: 155
 
 Initializing model
 

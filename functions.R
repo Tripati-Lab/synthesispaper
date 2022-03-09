@@ -53,7 +53,6 @@ fitsinglePartitioned <-
       
         "Bayesian"= fitClumpedRegressions(calibrationData=calDataSelected, 
                                  n.iter = generations, 
-                                 burninFrac = 0.5,
                                  priors = "Informative",
                                  D47error = "D47error")
       )
@@ -72,7 +71,6 @@ fitsinglePartitioned <-
               ),
               "Bayesian"=fitClumpedRegressions(calibrationData=calDataSelectedgroup, 
                                                n.iter = generations, 
-                                               burninFrac = 0.5,
                                                priors = "Informative",
                                                D47error = "D47error")
               )
