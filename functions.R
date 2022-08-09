@@ -1,7 +1,7 @@
 ##Functions are sourced from BayClump
 
 source(
-  "https://raw.githubusercontent.com/Tripati-Lab/BayClump/dev/Functions/Calibration_BayesianNonBayesian.R"
+  "https://raw.githubusercontent.com/Tripati-Lab/BayClump/main/Functions/Calibration_BayesianNonBayesian.R"
 )
 
 
