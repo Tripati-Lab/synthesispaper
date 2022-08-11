@@ -30,12 +30,13 @@ sink(dumpfile, type = "output")
 #synData <- read.csv('RawData/Current List_Dec1_2021.csv')
 #synData <- read.csv('RawData/Current List_Feb4_2022.csv')
 #synData <- read.csv('RawData/Current List_Mar1_2022.csv')
-synData <- read.csv('RawData/Current List_Aug9_2022.csv')
+#synData <- read.csv('RawData/Current List_Aug9_2022.csv')
+synData <- read.csv('RawData/Current List_Aug11_2022.csv')
 
 
 synData$TempError <- ifelse(synData$TempError ==0, 1E-5, synData$TempError)
 synData$D47error <- ifelse(synData$D47error ==0, 1E-5, synData$D47error)
-targetColumns <- colnames(synData)[c(34)]
+targetColumns <- colnames(synData)[c(32)]
 targetLevels<- names(which(table(synData[,targetColumns])>10))
 synData <- synData[synData[,targetColumns] %in% targetLevels ,]
 
@@ -46,7 +47,7 @@ SynthesisResults <- fitsinglePartitioned(
   generations = 50000,
   maxtry = 10,
   export = T,
-  prefix = paste0("Synthesis_",colnames(synData)[c(34)],"_", Sys.Date())
+  prefix = paste0("Synthesis_",colnames(synData)[c(33)],"_", Sys.Date())
 )
 
 
