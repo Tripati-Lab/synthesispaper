@@ -45,3 +45,8 @@ lapply(seq_along(Procesed), function(y){
   })
 })
 
+unlink(list.files(pattern = "messages.txt"))
+unlink(list.files(pattern = "time.txt"))
+unlink(list.files(pattern = "test.txt"))
+
+

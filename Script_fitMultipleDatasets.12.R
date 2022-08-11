@@ -12,9 +12,8 @@ library(loo)
 source("functions.R")
 
 tic()
-dumpfile <- file("script8messages.txt", open = "wt")
+dumpfile <- file("script9messages.txt", open = "wt")
 sink(dumpfile, type = "output")
-
 
 #Real analyses
 # Using the version on gdrive?
@@ -33,9 +32,11 @@ sink(dumpfile, type = "output")
 #synData <- read.csv('RawData/Current List_Mar1_2022.csv')
 synData <- read.csv('RawData/Current List_Aug9_2022.csv')
 
+
 synData$TempError <- ifelse(synData$TempError ==0, 1E-5, synData$TempError)
 synData$D47error <- ifelse(synData$D47error ==0, 1E-5, synData$D47error)
-targetColumns <- colnames(synData)[c(18)]
+targetColumns <- colnames(synData)[c(35)]
+synData <- synData[synData[,targetColumns] %in% c("Synthetic", "Forams"),]
 targetLevels<- names(which(table(synData[,targetColumns])>10))
 synData <- synData[synData[,targetColumns] %in% targetLevels ,]
 
@@ -46,11 +47,12 @@ SynthesisResults <- fitsinglePartitioned(
   generations = 50000,
   maxtry = 10,
   export = T,
-  prefix = paste0("Synthesis_",colnames(synData)[c(18)],"_", Sys.Date())
+  prefix = paste0("Synthesis_",colnames(synData)[c(35)],"_", Sys.Date())
 )
+
 
 sink()
 
-sink(file = "script8time.txt", type = c("output", "message"))
+sink(file = "script9time.txt", type = c("output", "message"))
 toc()
 sink()
