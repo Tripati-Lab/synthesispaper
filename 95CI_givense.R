@@ -1,3 +1,4 @@
+library(ggplot2)
 source(
   "https://raw.githubusercontent.com/Tripati-Lab/BayClump/main/Functions/Calibration_BayesianNonBayesian.R"
 )
@@ -15,3 +16,6 @@ ggplot(raw_ds_ci, aes(x = x))+
   geom_line(aes(y = ci_lower_est), lty = 2, col='grey') +
   geom_line(aes(y = ci_upper_est), lty = 2, col='grey') +
   theme_bw()
+
+write.csv(raw_ds_ci, "raw_ds_ci.csv")
+

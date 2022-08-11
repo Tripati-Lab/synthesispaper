@@ -12,3 +12,14 @@ Brief guide on the current and relevant files hosted in this repo
 - `Results`: Ouput of the `Script_fitMultipleDatasets.R` script.
 - `RawPlots`: Ouput of the `plotDataGroups.R` script.
 - `Processed`: Output of `ProcessResults.R`
+
+## Disclaimer
+- This is work in progress.
+- Please do NOT cite or use the files included in the repo without prior authorization.
+
+
+
+
+
+
+
