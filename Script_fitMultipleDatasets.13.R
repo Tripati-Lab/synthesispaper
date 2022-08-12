@@ -37,7 +37,7 @@ synData <- read.csv('RawData/Current List_Aug11_2022.csv')
 synData$TempError <- ifelse(synData$TempError ==0, 1E-5, synData$TempError)
 synData$D47error <- ifelse(synData$D47error ==0, 1E-5, synData$D47error)
 targetColumns <- colnames(synData)[c(35)]
-synData <- synData[synData[,targetColumns] %in% c("planktic", "benthic"),]
+synData <- synData[synData[,targetColumns] %in% c("Planktic", "Benthic"),]
 targetLevels<- names(which(table(synData[,targetColumns])>10))
 synData <- synData[synData[,targetColumns] %in% targetLevels ,]
 
