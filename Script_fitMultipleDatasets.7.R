@@ -32,7 +32,8 @@ sink(dumpfile, type = "output")
 #synData <- read.csv('RawData/Current List_Feb4_2022.csv')
 #synData <- read.csv('RawData/Current List_Mar1_2022.csv')
 #synData <- read.csv('RawData/Current List_Aug9_2022.csv')
-synData <- read.csv('RawData/Current List_Aug11_2022.csv')
+#synData <- read.csv('RawData/Current List_Aug11_2022.csv')
+synData <- read.csv('RawData/Current List_Aug15_2022.csv')
 
 
 synData$TempError <- ifelse(synData$TempError ==0, 1E-5, synData$TempError)
