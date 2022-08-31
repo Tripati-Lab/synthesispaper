@@ -15,6 +15,11 @@ pg1 <- rbindlist(fDS)[,-c(1,5)]
 tDs <- unique(sapply(strsplit(fileNames, "_"), `[[`, 2))
 
 Procesed <- lapply(tDs, function(x){
+  print(x)
+  if(x == "Mineralogy"){x = "Mineralogy_"}
+  if(x == "NaturalSynthetic"){x = "NaturalSynthetic_"}
+  if(x == "SyntheticVSForam"){x = "SyntheticVSForam_"}
+  
   tFiles <- filesFull[grep(x, fileNames)]
   key <- tFiles[[grep("keys", names(tFiles))]]
   dic <- tFiles[[grep("DICs", names(tFiles))]]
