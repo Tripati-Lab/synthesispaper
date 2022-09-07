@@ -9,7 +9,7 @@ names(filesFull) <- fileNames
 ##Create full dataset
 tFiles <- filesFull[grep("Parameter", fileNames)]
 fDS <- lapply(tFiles, function(x) x[is.na(x$Material),])
-pg1 <- rbindlist(fDS)[,-c(1,5)]
+pg1 <- rbindlist(fDS, idcol = 'File')[,-c(2,6)]
 
 ##Create column-level datasets
 tDs <- unique(sapply(strsplit(fileNames, "_"), `[[`, 2))
@@ -19,6 +19,7 @@ Procesed <- lapply(tDs, function(x){
   if(x == "Mineralogy"){x = "Mineralogy_"}
   if(x == "NaturalSynthetic"){x = "NaturalSynthetic_"}
   if(x == "SyntheticVSForam"){x = "SyntheticVSForam_"}
+  if(x == "SyntheticVSForamwithoutS"){x = "SyntheticVSForamwithoutS_"}
   
   tFiles <- filesFull[grep(x, fileNames)]
   key <- tFiles[[grep("keys", names(tFiles))]]
@@ -26,6 +27,7 @@ Procesed <- lapply(tDs, function(x){
   par <- tFiles[[grep("Parameter", names(tFiles))]]
   par <- merge(key, par, by.x = "number", by.y = 'Material', all = TRUE)
   par.full <- par[is.na(par$Freq),-c(1:6)]
+  par.full$targetColumns.y <- x
   par <- par[!is.na(par$original),-c(1,2,3,6,7)]
   dic <- merge(key, dic, by.x = "number", by.y = 'Material', all = TRUE)[,-c(1,2,3,6,7)]
   dic[is.na(dic$original),1] <- "Full"
