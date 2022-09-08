@@ -20,6 +20,7 @@ Procesed <- lapply(tDs, function(x){
   if(x == "NaturalSynthetic"){x = "NaturalSynthetic_"}
   if(x == "SyntheticVSForam"){x = "SyntheticVSForam_"}
   if(x == "SyntheticVSForamwithoutS"){x = "SyntheticVSForamwithoutS_"}
+  if(x == "SynCalForam"){x = "SynCalForam_"}
   
   tFiles <- filesFull[grep(x, fileNames)]
   key <- tFiles[[grep("keys", names(tFiles))]]
