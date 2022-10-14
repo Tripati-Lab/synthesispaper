@@ -32,5 +32,5 @@ SynthesisResults <- fitsinglePartitioned(
   generations = 50000,
   maxtry = 10,
   export = T,
-  prefix = paste0("Synthesis_",colnames(synData)[c(11)],"_onlySynthetic_", Sys.Date())
+  prefix = paste0("Synthesis_",colnames(synData)[c(11)],"onlySynthetic_", Sys.Date())
 )

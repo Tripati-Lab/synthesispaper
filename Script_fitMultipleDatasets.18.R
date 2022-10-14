@@ -33,5 +33,5 @@ SynthesisResults <- fitsinglePartitioned(
   generations = 50000,
   maxtry = 10,
   export = T,
-  prefix = paste0("Synthesis_",colnames(synData)[c(34)],"_withoutSwithoutNeither_", Sys.Date())
+  prefix = paste0("Synthesis_",colnames(synData)[c(34)],"withoutSwithoutNeither_", Sys.Date())
 )
