@@ -31,8 +31,9 @@ Procesed <- lapply(tDs, function(x){
   par.full$targetColumns.y <- x
   par <- par[!is.na(par$original),-c(1,2,3,6,7)]
   dic <- merge(key, dic, by.x = "number", by.y = 'Material', all = TRUE)[,-c(1,2,3,6,7)]
+  total<- sum(as.numeric(colnames(table(dic$original, dic$Freq))))
   dic[is.na(dic$original),1] <- "Full"
-  dic[is.na(dic$Freq),"Freq"] <- sum(dic$Freq, na.rm = T)
+  dic[is.na(dic$Freq),"Freq"] <- total
   
   par <- par[order(par$original),]
   colnames(par)[1] <- "Material"
