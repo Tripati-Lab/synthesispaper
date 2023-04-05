@@ -1,19 +1,15 @@
-##Functions are sourced from BayClump
-
-source(
-  "https://raw.githubusercontent.com/Tripati-Lab/BayClump/main/Functions/Calibration_BayesianNonBayesian.R"
-)
-
+#Read the dataset
+synData <- read.csv('RawData/Current List_Apr5_2023.csv')
 
 ##Basic functions
 
 fitsingleDataset <- function(data,
                              replicates = 2) {
   ##Models
-  a <- simulateYork_measured(data = data, replicates = replicates, samples=NULL)
-  b <- simulateLM_measured(data = data, replicates = replicates, samples=NULL)
-  c <- simulateDeming(data = data, replicates = replicates, samples=NULL)
-  d <- simulateLM_inverseweights(data = data, replicates = replicates, samples=NULL)
+  a <- cal.york(data = data, replicates = replicates, samples=NULL)
+  b <- cal.ols(data = data, replicates = replicates, samples=NULL)
+  c <- cal.deming(data = data, replicates = replicates, samples=NULL)
+  d <- cal.wols(data = data, replicates = replicates, samples=NULL)
 
     SumTable <- rbind.data.frame(
       cbind.data.frame(model = 'York', a),
@@ -51,10 +47,8 @@ fitsinglePartitioned <-
         fitsingleDataset(data = calDataSelected,
                          replicates = replicates),
       
-        "Bayesian"= fitClumpedRegressions(calibrationData=calDataSelected, 
-                                 n.iter = generations, 
-                                 priors = "Informative",
-                                 D47error = "D47error")
+        "Bayesian"= cal.bayesian(calibrationData=calDataSelected, 
+                                 priors = "Uninformative")
       )
       
 
@@ -69,10 +63,8 @@ fitsinglePartitioned <-
               list("NonBayesian"= fitsingleDataset(
                 calDataSelectedgroup
               ),
-              "Bayesian"=fitClumpedRegressions(calibrationData=calDataSelectedgroup, 
-                                               n.iter = generations, 
-                                               priors = "Informative",
-                                               D47error = "D47error")
+              "Bayesian"=cal.bayesian(calibrationData=calDataSelectedgroup, 
+                                               priors = "Uninformative")
               )
             )
           

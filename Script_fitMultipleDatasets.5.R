@@ -11,11 +11,6 @@ library(dplyr)
 library(loo)
 source("functions.R")
 
-tic()
-dumpfile <- file("script5messages.txt", open = "wt")
-sink(dumpfile, type = "output")
-
-
 #Real analyses
 # Using the version on gdrive?
 # library(googlesheets4)
@@ -51,10 +46,3 @@ SynthesisResults <- fitsinglePartitioned(
   export = T,
   prefix = paste0("Synthesis_",colnames(synData)[c(15)],"_", Sys.Date())
 )
-
-sink()
-
-sink(file = "script5time.txt", type = c("output", "message"))
-toc()
-sink()
-
