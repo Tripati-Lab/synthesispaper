@@ -1,0 +1,10 @@
+"","targetColumns","Model","Material","elpd_diff","se_diff"
+"1","NaturalSynthetic","BLM1_NE","Full",0,0
+"2","NaturalSynthetic","BLM3","Full",-17493.8569422028,139.812979130589
+"3","NaturalSynthetic","BLM1_E","Full",-40532.5215146977,355.193173773215
+"4","NaturalSynthetic","BLM3","1",0,0
+"5","NaturalSynthetic","BLM1_NE","1",-2036.13110557453,2.97301500256075
+"6","NaturalSynthetic","BLM1_E","1",-69075.7902629753,377.509260440771
+"7","NaturalSynthetic","BLM1_NE","2",0,0
+"8","NaturalSynthetic","BLM3","2",-295.440319821874,11.748426110216
+"9","NaturalSynthetic","BLM1_E","2",-4349.91377896381,113.273696910923

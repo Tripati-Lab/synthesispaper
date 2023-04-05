@@ -12,6 +12,14 @@ library(loo)
 source("functions.R")
 
 
+<<<<<<< HEAD
+=======
+info <- file.info(list.files(here("RawData"), full.names = T))
+mr <- rownames(info)[which.max(info$mtime)]
+
+synData <- read.csv(mr)
+
+>>>>>>> 0cee781cf9bc2cb17dc8691227d70c6f74747edf
 synData <- synData[synData$Mineralogy != c("S") ,]
 synData$TempError <- ifelse(synData$TempError ==0, 1E-5, synData$TempError)
 synData$D47error <- ifelse(synData$D47error ==0, 1E-5, synData$D47error)
@@ -27,5 +35,5 @@ SynthesisResults <- fitsinglePartitioned(
   generations = 50000,
   maxtry = 10,
   export = T,
-  prefix = paste0("Synthesis_",colnames(synData)[c(34)],"_without_S_", Sys.Date())
+  prefix = paste0("Synthesis_",colnames(synData)[c(34)],"withoutS_", Sys.Date())
 )

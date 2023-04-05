@@ -6,10 +6,17 @@ synData <- read.csv('RawData/Current List_Apr5_2023.csv')
 fitsingleDataset <- function(data,
                              replicates = 2) {
   ##Models
+<<<<<<< HEAD
   a <- cal.york(data = data, replicates = replicates, samples=NULL)
   b <- cal.ols(data = data, replicates = replicates, samples=NULL)
   c <- cal.deming(data = data, replicates = replicates, samples=NULL)
   d <- cal.wols(data = data, replicates = replicates, samples=NULL)
+=======
+  a <- cal.york(data = data, replicates = replicates)
+  b <- cal.ols(data = data, replicates = replicates)
+  c <- cal.deming(data = data, replicates = replicates)
+  d <- cal.wols(data = data, replicates = replicates)
+>>>>>>> 0cee781cf9bc2cb17dc8691227d70c6f74747edf
 
     SumTable <- rbind.data.frame(
       cbind.data.frame(model = 'York', a),
@@ -47,8 +54,13 @@ fitsinglePartitioned <-
         fitsingleDataset(data = calDataSelected,
                          replicates = replicates),
       
+<<<<<<< HEAD
         "Bayesian"= cal.bayesian(calibrationData=calDataSelected, 
                                  priors = "Uninformative")
+=======
+        "Bayesian"= cal.bayesian(calibrationData=calDataSelected,
+                                 priors = 'Weak')
+>>>>>>> 0cee781cf9bc2cb17dc8691227d70c6f74747edf
       )
       
 
@@ -61,25 +73,35 @@ fitsinglePartitioned <-
           resDS <-
             invisible(
               list("NonBayesian"= fitsingleDataset(
-                calDataSelectedgroup
+                calDataSelectedgroup,
+                replicates = replicates
               ),
+<<<<<<< HEAD
               "Bayesian"=cal.bayesian(calibrationData=calDataSelectedgroup, 
                                                priors = "Uninformative")
+=======
+              "Bayesian"=cal.bayesian(calibrationData=calDataSelectedgroup,
+                                      priors = 'Weak')
+>>>>>>> 0cee781cf9bc2cb17dc8691227d70c6f74747edf
               )
             )
-          
-          
         })
       
       names(subSampled) <- unique(calDataSelected$Material)
       
       ##Extract DICs
+      a <- cbind.data.frame("Material"="Full", attr(full$Bayesian,"loo"))[,1:3]
+      a <- data.frame(Model = row.names(a), a)
+      
       DICs <- rbind.data.frame(
-      cbind.data.frame("Material"="Full", data.frame(t(attr(full$Bayesian,"DICs")))),
+      a,
       rbindlist(lapply(subSampled, function(x){
-       data.frame(t(data.frame(attr(x$Bayesian,"DICs"))))
+       a <- data.frame(attr(x$Bayesian,"loo"))[,1:2]
+      data.frame(Model = row.names(a), a)
       } ), idcol = "Material")
       )
+      
+      row.names(DICs) <- NULL
 
       ##Extract parameters (non-Bayesian)
       
@@ -101,54 +123,61 @@ fitsinglePartitioned <-
       
       extractParamsBayesian <-  function(listBayesian, name, nameMaterial){
         
-        nr<-nrow(listBayesian$Bayesian$BLM3_fit$BUGSoutput$summary)
-        tdata <- listBayesian$Bayesian$BLM1_fit$BUGSoutput$summary[c(1:2),c(1:2)]
+        BLM1_fit <- rstan::summary(listBayesian$Bayesian$BLM1_fit)$summary
+        BLM3_fit <- rstan::summary(listBayesian$Bayesian$BLM3_fit)$summary
+        BLM1_fit_NoErrors <- rstan::summary(listBayesian$Bayesian$BLM1_fit_NoErrors)$summary
+        
+        BLM1_fit <- BLM1_fit[-grep("log_lik", row.names(BLM1_fit)),]
+        BLM3_fit <- BLM3_fit[-grep("log_lik", row.names(BLM3_fit)),]
+        BLM1_fit_NoErrors <- BLM1_fit_NoErrors[-grep("log_lik", row.names(BLM1_fit_NoErrors)),]
+        
+        BLM1_fit <- head(BLM1_fit, -2);  BLM3_fit<- head(BLM3_fit, -2);  BLM1_fit_NoErrors<-  head(BLM1_fit_NoErrors, -2)
+        
         a <- cbind.data.frame("Dataset"=name, 
                               "model"='BLM1_fit',
-                              "meanBeta"=tdata[2,1],
-                              "sdBeta"=tdata[2,2],
-                              "meanAlpha"=tdata[1,1], 
-                              "sdAlpha"=tdata[1,2], "Material"=ifelse(name!='subsets', NA, nameMaterial)
+                              "meanBeta"=BLM1_fit[2,1],
+                              "sdBeta"=BLM1_fit[2,3],
+                              "meanAlpha"=BLM1_fit[1,1], 
+                              "sdAlpha"=BLM1_fit[1,3], "Material"=ifelse(name!='subsets', NA, nameMaterial)
         )
         
-        tdata <- listBayesian$Bayesian$BLM1_fit_NoErrors$BUGSoutput$summary[c(1:2),c(1:2)]
         b <- cbind.data.frame("Dataset"=name, 
                               "model"='BLM1_fit_NoErrors',
-                              "meanBeta"=tdata[2,1],
-                              "sdBeta"=tdata[2,2],
-                              "meanAlpha"=tdata[1,1], 
-                              "sdAlpha"=tdata[1,2], "Material"=ifelse(name!='subsets', NA, nameMaterial)
+                              "meanBeta"=BLM1_fit_NoErrors[2,1],
+                              "sdBeta"=BLM1_fit_NoErrors[2,3],
+                              "meanAlpha"=BLM1_fit_NoErrors[1,1], 
+                              "sdAlpha"=BLM1_fit_NoErrors[1,3], "Material"=ifelse(name!='subsets', NA, nameMaterial)
         )
         
-        tdata <- listBayesian$Bayesian$BLM3_fit$BUGSoutput$summary[-c((nr-3):nr),c(1:2)]
-        nmat <- nrow(tdata)/2
+        nmat <- nrow(BLM3_fit)/2
         
-        c<- if(nrow(tdata) ==2 ){
+        c <- if(nmat == 1 ){
           
           cbind.data.frame("Dataset"=name, 
                            "model"='BLM3',
-                           "meanBeta"=tdata[2,1],
-                           "sdBeta"=tdata[2,2],
-                           "meanAlpha"=tdata[1,1], 
-                           "sdAlpha"=tdata[1,2], "Material"=ifelse(name!='subsets', NA, nameMaterial)
+                           "meanBeta"=BLM3_fit[2,1],
+                           "sdBeta"=BLM3_fit[2,3],
+                           "meanAlpha"=BLM3_fit[1,1], 
+                           "sdAlpha"=BLM3_fit[1,3], "Material"=ifelse(name!='subsets', NA, nameMaterial)
           )
           
         }else{
           
-          do.call(rbind, lapply(1:(nrow(tdata)/2), function(x){
+          BLM3_fit_beta <- BLM3_fit[grep("beta", row.names(BLM3_fit)),]
+          BLM3_fit_alpha <- BLM3_fit[-grep("beta", row.names(BLM3_fit)),]
+          
+          do.call(rbind, lapply(1:nmat, function(x){
             cbind.data.frame("Dataset"=name, 
                              "model"='BLM3',
-                             "meanBeta"=tdata[(x+nmat),1],
-                             "sdBeta"=tdata[(x+nmat),2],
-                             "meanAlpha"=tdata[(x),1], 
-                             "sdAlpha"=tdata[x,2], 
-                             "Material"=ifelse(name!='subsets', gsub("[^0-9]", "", row.names(tdata)[x]), nameMaterial) 
+                             "meanBeta"=BLM3_fit_beta[x,1],
+                             "sdBeta"=BLM3_fit_beta[x,3],
+                             "meanAlpha"=BLM3_fit_alpha[x,1], 
+                             "sdAlpha"=BLM3_fit_alpha[x,3], 
+                             "Material"=ifelse(name!='subsets', gsub("[^0-9]", "", row.names(BLM3_fit)[x]), nameMaterial) 
             )
           }))
         }
-        
         rbind.data.frame(a,b,c)
-        
       }
       
       paramBayesian <- rbind(
@@ -164,28 +193,12 @@ fitsinglePartitioned <-
       params <- params[with(params, order(params$Dataset, params$model, params$Material)), ]
       params <- params[,c(1,2,7,3:6)]
       
-      ##Convergence
-      
-      Convergence = rbindlist(list(
-        "Full"=
-      rbindlist(lapply(full$Bayesian, function(x){
-        as.data.frame(x$BUGSoutput$summary)
-      }), idcol = "Model"),
-      "Subsets"=
-      rbindlist( lapply(subSampled, function(y){
-        rbindlist(lapply(y$Bayesian, function(x){
-          as.data.frame(x$BUGSoutput$summary)
-        }), idcol = "Model")
-      }), idcol = 'Material')
-      ), fill=T, idcol = "Dataset")
-      
       key <- as.data.frame(table(key))
       key <- key[key$Freq != 0,]
       
       toRet <- list(
         'params'=params,
         'DICs'=DICs,
-        'Convergence'=Convergence,
         'key'=key
       )
       
@@ -196,7 +209,6 @@ fitsinglePartitioned <-
 
     sumPars <- rbindlist(lapply(sumPart, function(x) x$params), idcol = 'targetColumns')
     DICs <- rbindlist(lapply(sumPart, function(x) x$DICs), idcol = 'targetColumns')
-    Conv <- rbindlist(lapply(sumPart, function(x) x$Convergence), idcol = 'targetColumns')
     keys<-rbindlist(lapply(sumPart, function(x) x$key), idcol = 'targetColumns')
     
 
@@ -204,8 +216,7 @@ fitsinglePartitioned <-
       list(
         ParameterSummary = sumPars,
         DICs = DICs,
-        keys = keys,
-        Conv = Conv
+        keys = keys
       )
     
     if (export == T) {

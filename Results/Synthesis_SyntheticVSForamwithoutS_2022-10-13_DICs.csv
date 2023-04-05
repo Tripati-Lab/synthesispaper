@@ -1,0 +1,13 @@
+"","targetColumns","Model","Material","elpd_diff","se_diff"
+"1","SyntheticVSForam","BLM1_NE","Full",0,0
+"2","SyntheticVSForam","BLM3","Full",-11573.2027173687,107.35042894657
+"3","SyntheticVSForam","BLM1_E","Full",-49598.8153325309,434.999139271688
+"4","SyntheticVSForam","BLM1_NE","1",0,0
+"5","SyntheticVSForam","BLM3","1",-17341.8265930438,97.9717900742451
+"6","SyntheticVSForam","BLM1_E","1",-146084.229422913,870.527977336928
+"7","SyntheticVSForam","BLM3","2",0,0
+"8","SyntheticVSForam","BLM1_NE","2",-1140.88517672115,13.3751270693698
+"9","SyntheticVSForam","BLM1_E","2",-22501.9631102403,191.428368334035
+"10","SyntheticVSForam","BLM1_NE","3",0,0
+"11","SyntheticVSForam","BLM3","3",-34.9402809767218,11.1324327827855
+"12","SyntheticVSForam","BLM1_E","3",-3807.89735076324,93.1302026560855
