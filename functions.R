@@ -6,17 +6,10 @@ synData <- read.csv('RawData/Current List_Apr5_2023.csv')
 fitsingleDataset <- function(data,
                              replicates = 2) {
   ##Models
-<<<<<<< HEAD
   a <- cal.york(data = data, replicates = replicates, samples=NULL)
   b <- cal.ols(data = data, replicates = replicates, samples=NULL)
   c <- cal.deming(data = data, replicates = replicates, samples=NULL)
   d <- cal.wols(data = data, replicates = replicates, samples=NULL)
-=======
-  a <- cal.york(data = data, replicates = replicates)
-  b <- cal.ols(data = data, replicates = replicates)
-  c <- cal.deming(data = data, replicates = replicates)
-  d <- cal.wols(data = data, replicates = replicates)
->>>>>>> 0cee781cf9bc2cb17dc8691227d70c6f74747edf
 
     SumTable <- rbind.data.frame(
       cbind.data.frame(model = 'York', a),
@@ -54,15 +47,9 @@ fitsinglePartitioned <-
         fitsingleDataset(data = calDataSelected,
                          replicates = replicates),
       
-<<<<<<< HEAD
         "Bayesian"= cal.bayesian(calibrationData=calDataSelected, 
                                  priors = "Uninformative")
-=======
-        "Bayesian"= cal.bayesian(calibrationData=calDataSelected,
-                                 priors = 'Weak')
->>>>>>> 0cee781cf9bc2cb17dc8691227d70c6f74747edf
       )
-      
 
       #Partitioned by level
       subSampled <-
@@ -76,13 +63,8 @@ fitsinglePartitioned <-
                 calDataSelectedgroup,
                 replicates = replicates
               ),
-<<<<<<< HEAD
               "Bayesian"=cal.bayesian(calibrationData=calDataSelectedgroup, 
                                                priors = "Uninformative")
-=======
-              "Bayesian"=cal.bayesian(calibrationData=calDataSelectedgroup,
-                                      priors = 'Weak')
->>>>>>> 0cee781cf9bc2cb17dc8691227d70c6f74747edf
               )
             )
         })
