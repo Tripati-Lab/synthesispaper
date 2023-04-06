@@ -11,12 +11,6 @@ library(dplyr)
 library(loo)
 source("functions.R")
 
-
-info <- file.info(list.files(here("RawData"), full.names = T))
-mr <- rownames(info)[which.max(info$mtime)]
-
-synData <- read.csv(mr)
-
 synData <- synData[synData$Mineralogy != c("S") ,]
 synData <- synData[synData$SyntheticVSForam != "Neither",]
 synData$TempError <- ifelse(synData$TempError ==0, 1E-5, synData$TempError)

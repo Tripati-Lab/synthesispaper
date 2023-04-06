@@ -11,8 +11,6 @@ library(dplyr)
 library(loo)
 source("functions.R")
 
-synData <- read.csv(mr)
-
 synData$TempError <- ifelse(synData$TempError ==0, 1E-5, synData$TempError)
 synData$D47error <- ifelse(synData$D47error ==0, 1E-5, synData$D47error)
 targetColumns <- colnames(synData)[c(15)]

@@ -12,10 +12,6 @@ library(loo)
 source("functions.R")
 
 
-info <- file.info(list.files(here("RawData"), full.names = T))
-mr <- rownames(info)[which.max(info$mtime)]
-
-synData <- read.csv(mr)
 
 synData1 <- synData[synData$Mineralogy == "C" & synData$NaturalSynthetic == "Synthetic",]
 synData2 <- synData[synData$Forams == "Foraminifera",]

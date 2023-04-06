@@ -26,7 +26,3 @@ SynthesisResults <- fitsinglePartitioned(
   export = T,
   prefix = paste0("Synthesis_",colnames(synData)[c(19)],"_", Sys.Date())
 )
-<<<<<<< HEAD
-=======
-
->>>>>>> 0cee781cf9bc2cb17dc8691227d70c6f74747edf

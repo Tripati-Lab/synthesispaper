@@ -11,12 +11,6 @@ library(dplyr)
 library(loo)
 source("functions.R")
 
-
-info <- file.info(list.files(here("RawData"), full.names = T))
-mr <- rownames(info)[which.max(info$mtime)]
-
-synData <- read.csv(mr)
-
 synData <- synData[synData$Mineralogy %in% c("A", "C") ,]
 synData$TempError <- ifelse(synData$TempError ==0, 1E-5, synData$TempError)
 synData$D47error <- ifelse(synData$D47error ==0, 1E-5, synData$D47error)
