@@ -22,9 +22,5 @@ synData <- synData[synData[,targetColumns] %in% targetLevels ,]
 SynthesisResults <- fitsinglePartitioned(
   calData = synData,
   targetColumns = targetColumns,
-  replicates = 1000,
-  generations = 50000,
-  maxtry = 10,
-  export = T,
   prefix = paste0("Synthesis_",colnames(synData)[c(34)],"withoutS_", Sys.Date())
 )

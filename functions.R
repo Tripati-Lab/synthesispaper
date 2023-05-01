@@ -6,10 +6,10 @@ synData <- read.csv('RawData/Current List_Apr5_2023.csv')
 fitsingleDataset <- function(data,
                              replicates = 2) {
   ##Models
-  a <- cal.york(data = data, replicates = replicates, samples=NULL)
-  b <- cal.ols(data = data, replicates = replicates, samples=NULL)
-  c <- cal.deming(data = data, replicates = replicates, samples=NULL)
-  d <- cal.wols(data = data, replicates = replicates, samples=NULL)
+  a <- cal.york(data = data, replicates = replicates)
+  b <- cal.ols(data = data, replicates = replicates)
+  c <- cal.deming(data = data, replicates = replicates)
+  d <- cal.wols(data = data, replicates = replicates)
 
     SumTable <- rbind.data.frame(
       cbind.data.frame(model = 'York', a),
