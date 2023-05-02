@@ -25,8 +25,8 @@ fitsingleDataset <- function(data,
 fitsinglePartitioned <-
   function(calData,
            targetColumns,
-           replicates = 2 ,
-           generations = 1000,
+           replicates = 100 ,
+           generations = 20000,
            maxtry = 10,
            export = T,
            prefix = 'results') {
