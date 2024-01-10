@@ -1,5 +1,5 @@
 #Read the dataset
-synData <- read.csv('RawData/Current List_Apr5_2023.csv')
+synData <- read.csv('RawData/Current List_Jan10_2024')
 
 ##Basic functions
 
