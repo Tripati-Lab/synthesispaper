@@ -54,6 +54,7 @@ fitsinglePartitioned <-
       #Partitioned by level
       subSampled <-
         lapply(unique(calDataSelected$Material), function(y) {
+          print(y)
           calDataSelectedgroup <-
             calDataSelected[calDataSelected$Material == y, ]
           calDataSelectedgroup$Material <- 1
